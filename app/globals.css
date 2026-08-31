@@ -113,10 +113,10 @@
   --elevation-2: 0 4px 16px rgba(0, 0, 0, 0.08);
   --elevation-3: 0 12px 40px rgba(0, 0, 0, 0.12);
 
-  --gradient-blue: linear-gradient(135deg, #0a84ff 0%, #5e5ce6 100%);
-  --gradient-violet: linear-gradient(135deg, #5e5ce6 0%, #bf5af2 100%);
-  --gradient-mint: linear-gradient(135deg, #30d158 0%, #0a84ff 100%);
-  --gradient-sunset: linear-gradient(135deg, #ff9500 0%, #ff375f 100%);
+  --gradient-blue: linear-gradient(160deg, #1a8cff 0%, #0a5fd0 100%);
+  --gradient-violet: linear-gradient(160deg, #8a63f8 0%, #5a34d4 100%);
+  --gradient-mint: linear-gradient(160deg, #34c759 0%, #14914a 100%);
+  --gradient-sunset: linear-gradient(160deg, #ffa30a 0%, #ff6a00 100%);
 
   --sidebar: #ffffff;
   --sidebar-foreground: #1d1d1f;
@@ -136,26 +136,26 @@
      avoided for the page so elevated surfaces still read as elevated.
      ------------------------------------------------------------------ */
   --background: #0b0b0f;
-  --foreground: #f5f5f7;
+  --foreground: #ffffff;
 
   --surface: #151519;
   --surface-2: #1f1f25;
 
   --card: #151519;
-  --card-foreground: #f5f5f7;
+  --card-foreground: #ffffff;
   --popover: #1f1f25;
-  --popover-foreground: #f5f5f7;
+  --popover-foreground: #ffffff;
 
   /* The brighter system blue — the marketing blue goes muddy on black. */
   --primary: #0a84ff;
   --primary-foreground: #ffffff;
 
   --secondary: #1f1f25;
-  --secondary-foreground: #f5f5f7;
+  --secondary-foreground: #ffffff;
   --muted: #1f1f25;
   --muted-foreground: #a3a3ab;
   --accent: #26262e;
-  --accent-foreground: #f5f5f7;
+  --accent-foreground: #ffffff;
 
   --destructive: #ff453a;
   --success: #30d158;
@@ -180,17 +180,17 @@
   --elevation-2: 0 8px 24px rgba(0, 0, 0, 0.55);
   --elevation-3: 0 20px 60px rgba(0, 0, 0, 0.65);
 
-  --gradient-blue: linear-gradient(135deg, #0a84ff 0%, #5e5ce6 100%);
-  --gradient-violet: linear-gradient(135deg, #6f6cf7 0%, #c86bf5 100%);
-  --gradient-mint: linear-gradient(135deg, #30d158 0%, #0a84ff 100%);
-  --gradient-sunset: linear-gradient(135deg, #ff9f0a 0%, #ff375f 100%);
+  --gradient-blue: linear-gradient(160deg, #0a84ff 0%, #0a44b0 100%);
+  --gradient-violet: linear-gradient(160deg, #7c5cf7 0%, #4326b4 100%);
+  --gradient-mint: linear-gradient(160deg, #30d158 0%, #10723a 100%);
+  --gradient-sunset: linear-gradient(160deg, #ff9f0a 0%, #e0490d 100%);
 
   --sidebar: #151519;
-  --sidebar-foreground: #f5f5f7;
+  --sidebar-foreground: #ffffff;
   --sidebar-primary: #0a84ff;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #1f1f25;
-  --sidebar-accent-foreground: #f5f5f7;
+  --sidebar-accent-foreground: #ffffff;
   --sidebar-border: rgba(255, 255, 255, 0.09);
   --sidebar-ring: rgba(10, 132, 255, 0.55);
 }

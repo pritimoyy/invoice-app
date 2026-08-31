@@ -29,14 +29,14 @@ export const DISPLAY_STATUS_LABEL: Record<DisplayStatus, string> = {
   cancelled: 'Cancelled',
 }
 
-// text-red-700 for anything currently unpaid and late; text-emerald-700
-// for anything resolved (paid, whether or not it was late) — matches the
-// colors already used in the dashboard and payments section. Everything
-// else stays plain neutral, same as every other badge in the app.
+// Theme tokens, not fixed palette values: these classes are rendered on a
+// surface that changes between light and dark, so hardcoded neutrals came
+// out mid-grey on a dark card. Destructive for anything unpaid and late,
+// success for anything settled, muted otherwise.
 export function displayStatusClassName(status: DisplayStatus): string {
-  if (status === 'overdue') return 'text-red-700'
-  if (status === 'paid' || status === 'paid_late') return 'text-emerald-700'
-  return 'text-neutral-500'
+  if (status === 'overdue') return 'text-destructive'
+  if (status === 'paid' || status === 'paid_late') return 'text-success'
+  return 'text-muted-foreground'
 }
 
 export function computeDisplayStatus(input: {

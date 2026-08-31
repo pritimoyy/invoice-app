@@ -93,7 +93,8 @@ export function StatusSelect({
   // picking an action fires it without the control drifting off the truth.
   function handleChange(event: ChangeEvent<HTMLSelectElement>) {
     const value = event.target.value
-    if (!value) return
+    // Empty = one of the informational rows; the current status = no change.
+    if (!value || value === displayStatus) return
 
     if (value.startsWith(PAID_PREFIX)) {
       const method = value.slice(PAID_PREFIX.length) as PaymentMethod
@@ -146,8 +147,11 @@ export function StatusSelect({
       className={`${selectClass} ${displayStatusClassName(displayStatus)}`}
     >
       {/* The current status — always present so the select has something
-          valid to display, never selectable as a "change". */}
-      <option value={displayStatus} disabled>
+          valid to display. Deliberately NOT disabled: Chrome greys out the
+          whole control when its selected option is disabled, which made
+          every status pill render in the system disabled colour. Re-picking
+          it is a no-op, handled in handleChange instead. */}
+      <option value={displayStatus}>
         {pending ? 'Working…' : DISPLAY_STATUS_LABEL[displayStatus]}
       </option>
 
