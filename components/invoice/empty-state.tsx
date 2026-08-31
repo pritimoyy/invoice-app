@@ -19,7 +19,7 @@ export function EmptyState({
     <div className="app-card mt-6 flex flex-col items-center gap-2 px-6 py-14 text-center">
       <p className="text-[15px] font-medium text-foreground">{title}</p>
       {description ? (
-        <p className="max-w-sm text-[13px] leading-relaxed text-muted-foreground">
+        <p className="max-w-sm text-[14px] leading-relaxed text-muted-foreground">
           {description}
         </p>
       ) : null}

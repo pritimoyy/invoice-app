@@ -59,7 +59,7 @@ export function AppNav({
               href={link.href}
               aria-current={isActive(pathname, link.href) ? 'page' : undefined}
               className={cn(
-                'shrink-0 rounded-full px-3 py-1.5 text-[13px] font-medium transition-colors',
+                'shrink-0 rounded-full px-3 py-1.5 text-[14px] font-medium transition-colors',
                 isActive(pathname, link.href)
                   ? 'bg-secondary text-foreground'
                   : 'text-muted-foreground hover:bg-secondary/60 hover:text-foreground',
@@ -73,7 +73,7 @@ export function AppNav({
         <div className="order-2 ml-auto flex items-center gap-3 lg:order-3">
           <ThemeToggle />
           {email ? (
-            <span className="hidden text-[13px] text-muted-foreground xl:inline">
+            <span className="hidden text-[14px] text-muted-foreground xl:inline">
               {email}
             </span>
           ) : null}

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: 'Invoice',
 }
 
-const microLabel = 'text-[13px] font-medium text-muted-foreground'
+const microLabel = 'text-[14px] font-medium text-muted-foreground'
 
 /**
  * Read-only — no inputs, no server actions, nothing that could mutate the
@@ -39,7 +39,7 @@ export default async function PublicInvoicePage({
           <h1 className="text-[34px] font-bold leading-[1.05] tracking-[-0.03em]">
             Invoice
           </h1>
-          <p className="text-right text-[13px] font-semibold tabular-nums text-muted-foreground">
+          <p className="text-right text-[14px] font-semibold tabular-nums text-muted-foreground">
             {data.invoiceNumber}
           </p>
         </div>
@@ -67,7 +67,7 @@ export default async function PublicInvoicePage({
               Due {data.dueDate || '—'}
             </p>
             {data.placeOfSupply ? (
-              <p className="text-[13px] text-muted-foreground">
+              <p className="text-[14px] text-muted-foreground">
                 Place of supply {data.placeOfSupply}
               </p>
             ) : null}
@@ -115,7 +115,7 @@ export default async function PublicInvoicePage({
                   {subLines
                     .filter((line) => line.trim() !== '')
                     .map((line, idx) => (
-                      <p key={idx} className="mt-0.5 text-[13px] text-muted-foreground">
+                      <p key={idx} className="mt-0.5 text-[14px] text-muted-foreground">
                         · {line}
                       </p>
                     ))}
@@ -210,18 +210,18 @@ export default async function PublicInvoicePage({
                 </>
               ) : null}
             </p>
-            <p className="mt-2 text-[13px] text-muted-foreground">
+            <p className="mt-2 text-[14px] text-muted-foreground">
               Terms: {data.payment.termsLabel}
             </p>
             {(data.exportDeclaration || data.reverseChargeNote || data.exchangeRateNote) ? (
-              <p className="mt-3 text-[13px] leading-relaxed text-muted-foreground">
+              <p className="mt-3 text-[14px] leading-relaxed text-muted-foreground">
                 {[data.exportDeclaration, data.reverseChargeNote, data.exchangeRateNote]
                   .filter(Boolean)
                   .join('  ')}
               </p>
             ) : null}
             {data.notes !== '' ? (
-              <p className="mt-4 whitespace-pre-line text-[13px] leading-relaxed text-muted-foreground">
+              <p className="mt-4 whitespace-pre-line text-[14px] leading-relaxed text-muted-foreground">
                 {data.notes}
               </p>
             ) : null}

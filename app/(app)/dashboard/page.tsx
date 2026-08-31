@@ -57,7 +57,7 @@ function StatCard({
       }
     >
       <p
-        className={`text-[13px] font-medium ${
+        className={`text-[14px] font-medium ${
           isGradient ? 'text-white/80' : 'text-muted-foreground'
         }`}
       >
@@ -181,7 +181,7 @@ export default async function DashboardPage() {
       </div>
 
       {recurringDueCount ? (
-        <p className="mt-3 text-[13px] text-muted-foreground">
+        <p className="mt-3 text-[14px] text-muted-foreground">
           {recurringDueCount} recurring invoice{recurringDueCount === 1 ? '' : 's'} due —{' '}
           <Link
             href="/recurring"
@@ -194,7 +194,7 @@ export default async function DashboardPage() {
       ) : null}
 
       {draftCount ? (
-        <p className="mt-3 text-[13px] text-muted-foreground">
+        <p className="mt-3 text-[14px] text-muted-foreground">
           {draftCount} draft{draftCount === 1 ? '' : 's'} waiting to be sent —{' '}
           <Link href="/invoices" className="underline-offset-4 hover:text-foreground hover:underline">
             review them
@@ -237,7 +237,7 @@ export default async function DashboardPage() {
           </h2>
           <Link
             href="/invoices"
-            className="text-[13px] font-medium text-muted-foreground hover:text-foreground hover:underline"
+            className="text-[14px] font-medium text-muted-foreground hover:text-foreground hover:underline"
           >
             All invoices
           </Link>
@@ -259,7 +259,7 @@ export default async function DashboardPage() {
                 <Link
                   key={inv.id}
                   href={`/invoices/${inv.id}/edit`}
-                  className="flex items-center gap-4 border-b border-hairline py-3 text-[13px] hover:bg-secondary"
+                  className="flex items-center gap-4 border-b border-hairline py-3 text-[14px] hover:bg-secondary"
                 >
                   <span className="flex-1 text-foreground">{inv.bill_to_name}</span>
                   <span className="text-muted-foreground">
@@ -271,7 +271,7 @@ export default async function DashboardPage() {
                   </span>
                   <Badge
                     variant="outline"
-                    className={`h-auto px-2 py-0.5 text-[11px] font-medium ${displayStatusClassName(displayStatus)}`}
+                    className={`h-auto px-2 py-0.5 text-[12px] font-medium ${displayStatusClassName(displayStatus)}`}
                   >
                     {DISPLAY_STATUS_LABEL[displayStatus]}
                   </Badge>
@@ -283,7 +283,7 @@ export default async function DashboardPage() {
             })}
           </div>
         ) : (
-          <p className="mt-4 text-[13px] text-muted-foreground">No invoices yet.</p>
+          <p className="mt-4 text-[14px] text-muted-foreground">No invoices yet.</p>
         )}
       </div>
     </div>

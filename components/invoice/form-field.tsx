@@ -17,7 +17,7 @@ const fieldClass =
   'focus-visible:border-ring focus-visible:bg-surface focus-visible:ring-[3px] focus-visible:ring-ring/40 ' +
   'disabled:cursor-not-allowed disabled:opacity-50'
 
-const labelClass = 'text-[13px] font-medium text-muted-foreground'
+const labelClass = 'text-[14px] font-medium text-muted-foreground'
 
 export function FormField({
   name,
@@ -53,7 +53,7 @@ export function FormField({
         disabled={disabled}
         className={fieldClass}
       />
-      {hint ? <p className="text-[13px] text-muted-foreground">{hint}</p> : null}
+      {hint ? <p className="text-[14px] text-muted-foreground">{hint}</p> : null}
     </div>
   )
 }
@@ -136,7 +136,7 @@ export function FormSelect({
           </option>
         ))}
       </select>
-      {hint ? <p className="text-[13px] text-muted-foreground">{hint}</p> : null}
+      {hint ? <p className="text-[14px] text-muted-foreground">{hint}</p> : null}
     </div>
   )
 }

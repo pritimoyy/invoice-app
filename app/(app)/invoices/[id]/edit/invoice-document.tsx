@@ -73,7 +73,7 @@ export type InvoiceDocumentProps = {
 // rate card" using one <select>'s value alone.
 const CUSTOM_ITEM_VALUE = '__custom__'
 
-const microLabel = 'text-[13px] font-medium text-muted-foreground'
+const microLabel = 'text-[14px] font-medium text-muted-foreground'
 const fieldClass =
   'rounded-lg border border-transparent bg-transparent px-2 py-1 text-inherit outline-none ' +
   // Left-only inset: the negative margin exists so a field's text lines up
@@ -94,7 +94,7 @@ const fieldClass =
 // read as part of the number — "₹2,000 0%".
 const taxSelectClass =
   'h-7 w-14 shrink-0 cursor-pointer rounded-full border border-hairline bg-secondary ' +
-  'px-1.5 text-[13px] text-muted-foreground outline-none transition-colors ' +
+  'px-1.5 text-[14px] text-muted-foreground outline-none transition-colors ' +
   'hover:bg-accent focus-visible:border-ring focus-visible:ring-[3px] ' +
   'focus-visible:ring-ring/30 disabled:cursor-not-allowed disabled:opacity-50'
 
@@ -158,7 +158,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
         <h1 className="text-[34px] font-bold leading-[1.05] tracking-[-0.03em]">
           Invoice
         </h1>
-        <p className="text-right text-[13px] font-semibold tabular-nums text-muted-foreground">
+        <p className="text-right text-[14px] font-semibold tabular-nums text-muted-foreground">
           {data.invoiceNumber}
         </p>
       </div>
@@ -208,7 +208,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
             />
           </p>
           {data.placeOfSupply ? (
-            <p className="text-[13px] text-muted-foreground">
+            <p className="text-[14px] text-muted-foreground">
               Place of supply {data.placeOfSupply}
             </p>
           ) : null}
@@ -270,7 +270,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
                 <button
                   type="button"
                   onClick={() => addDescLine(item.key, item.description)}
-                  className="self-start rounded-md px-1.5 py-0.5 text-[13px] text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-muted-foreground"
+                  className="self-start rounded-md px-1.5 py-0.5 text-[14px] text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-muted-foreground"
                 >
                   + Video title
                 </button>
@@ -296,7 +296,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
               <div className="w-32 pt-0.5 text-right font-semibold tabular-nums">
                 {formatPaise(lineSubtotals[i] ?? 0, { showPaise: false, currency })}
                 {taxPaise > 0 ? (
-                  <div className="text-[11px] font-normal text-muted-foreground">
+                  <div className="text-[12px] font-normal text-muted-foreground">
                     +{formatPaise(taxPaise, { showPaise: false, currency })} tax
                   </div>
                 ) : null}
@@ -317,7 +317,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
                   type="button"
                   onClick={() => onItemMove(item.key, -1)}
                   disabled={i === 0}
-                  className="flex size-6 shrink-0 items-center justify-center rounded-full text-[13px] transition-colors hover:bg-secondary hover:text-foreground disabled:pointer-events-none disabled:opacity-30"
+                  className="flex size-6 shrink-0 items-center justify-center rounded-full text-[14px] transition-colors hover:bg-secondary hover:text-foreground disabled:pointer-events-none disabled:opacity-30"
                 >
                   ↑
                 </button>
@@ -325,7 +325,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
                   type="button"
                   onClick={() => onItemMove(item.key, 1)}
                   disabled={i === items.length - 1}
-                  className="flex size-6 shrink-0 items-center justify-center rounded-full text-[13px] transition-colors hover:bg-secondary hover:text-foreground disabled:pointer-events-none disabled:opacity-30"
+                  className="flex size-6 shrink-0 items-center justify-center rounded-full text-[14px] transition-colors hover:bg-secondary hover:text-foreground disabled:pointer-events-none disabled:opacity-30"
                 >
                   ↓
                 </button>
@@ -333,7 +333,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
                   type="button"
                   onClick={() => onItemRemove(item.key)}
                   disabled={items.length === 1}
-                  className="flex size-6 shrink-0 items-center justify-center rounded-full text-[13px] transition-colors hover:bg-destructive/10 hover:text-destructive disabled:pointer-events-none disabled:opacity-30"
+                  className="flex size-6 shrink-0 items-center justify-center rounded-full text-[14px] transition-colors hover:bg-destructive/10 hover:text-destructive disabled:pointer-events-none disabled:opacity-30"
                 >
                   ✕
                 </button>
@@ -354,7 +354,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
               onAddFromService(e.target.value)
             }
           }}
-          className={`${fieldClass} w-auto max-w-[260px] pb-1 text-[13px] font-medium text-muted-foreground`}
+          className={`${fieldClass} w-auto max-w-[260px] pb-1 text-[14px] font-medium text-muted-foreground`}
         >
           <option value="">+ Add line item…</option>
           <option value={CUSTOM_ITEM_VALUE}>+ New custom item</option>
@@ -453,7 +453,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
       </div>
 
       <div className="flex flex-col gap-4 border-t border-border pt-6 sm:flex-row sm:items-start sm:gap-10">
-        <label className="flex items-start gap-2.5 text-[13px] text-foreground">
+        <label className="flex items-start gap-2.5 text-[14px] text-foreground">
           <input
             type="checkbox"
             checked={reverseCharge}
@@ -462,7 +462,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
           />
           <span>
             Reverse charge
-            <span className="mt-0.5 block text-[11px] text-muted-foreground">
+            <span className="mt-0.5 block text-[12px] text-muted-foreground">
               Prints &ldquo;Tax payable under reverse charge.&rdquo;
             </span>
           </span>
@@ -481,7 +481,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
               inputMode="decimal"
               className={`${fieldClass} w-36 pb-1 text-[15px] tabular-nums`}
             />
-            <p className="text-[11px] text-muted-foreground">
+            <p className="text-[12px] text-muted-foreground">
               1 {currency} = this many rupees, printed for your accountant.
             </p>
           </div>
@@ -489,7 +489,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
       </div>
 
       {gstTreatment === 'export' && !hasLut ? (
-        <p className="border-l-2 border-destructive pl-3 text-[13px] leading-relaxed text-destructive">
+        <p className="border-l-2 border-destructive pl-3 text-[14px] leading-relaxed text-destructive">
           This invoice is zero-rated as an export, but no LUT is recorded in
           Settings — so the Letter of Undertaking declaration can&apos;t be printed.
           Either add your LUT in Settings or choose a different tax treatment.
@@ -508,7 +508,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
           placeholder={data.payment.termsLabel}
           className={`${fieldClass} w-full resize-y pb-1 text-[15px] leading-relaxed text-foreground`}
         />
-        <p className="text-[11px] text-muted-foreground">
+        <p className="text-[12px] text-muted-foreground">
           Printed on the invoice if set, otherwise defaults to your standard terms.
         </p>
       </div>

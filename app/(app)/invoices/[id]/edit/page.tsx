@@ -102,7 +102,7 @@ export default async function EditInvoicePage({
             allowSend={false}
           />
           {invoice.sent_at ? (
-            <span className="text-[11px] text-muted-foreground">
+            <span className="text-[12px] text-muted-foreground">
               Sent{' '}
               {new Date(invoice.sent_at).toLocaleDateString('en-IN', {
                 day: '2-digit',
@@ -117,7 +117,7 @@ export default async function EditInvoicePage({
             href={`/api/invoices/${invoice.id}/pdf`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[13px] font-medium text-primary hover:underline"
+            className="text-[14px] font-medium text-primary hover:underline"
           >
             Download PDF
           </a>
@@ -126,14 +126,14 @@ export default async function EditInvoicePage({
               href={`/i/${invoice.public_token}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[13px] font-medium text-primary hover:underline"
+              className="text-[14px] font-medium text-primary hover:underline"
             >
               Public link
             </a>
           ) : null}
           <Link
             href={isEstimate ? '/estimates' : '/invoices'}
-            className="text-[13px] font-medium text-primary hover:underline"
+            className="text-[14px] font-medium text-primary hover:underline"
           >
             {isEstimate ? 'Estimates' : 'Invoices'}
           </Link>

@@ -52,13 +52,13 @@ export default async function ClientsPage({
           <Table>
           <TableHeader>
             <TableRow className="border-hairline hover:bg-transparent">
-              <TableHead className="h-11 px-4 text-[13px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-[14px] font-medium text-muted-foreground">
                 Name
               </TableHead>
-              <TableHead className="h-11 px-4 text-[13px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-[14px] font-medium text-muted-foreground">
                 Location
               </TableHead>
-              <TableHead className="h-11 px-4 text-[13px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-[14px] font-medium text-muted-foreground">
                 GSTIN
               </TableHead>
               <TableHead className="h-11 px-4" />
@@ -75,17 +75,17 @@ export default async function ClientsPage({
                     {c.name}
                   </Link>
                 </TableCell>
-                <TableCell className="px-4 py-3.5 text-[13px] text-muted-foreground">
+                <TableCell className="px-4 py-3.5 text-[14px] text-muted-foreground">
                   {[c.city, c.state_code].filter(Boolean).join(' · ') || '—'}
                 </TableCell>
-                <TableCell className="px-4 py-3.5 text-[13px] text-muted-foreground">
+                <TableCell className="px-4 py-3.5 text-[14px] text-muted-foreground">
                   {c.gstin ?? '—'}
                 </TableCell>
                 <TableCell className="px-4 py-3.5 text-right">
                   <div className="flex items-center justify-end gap-4">
                     <Link
                       href={`/clients/${c.id}`}
-                      className="text-[13px] font-medium text-primary hover:underline"
+                      className="text-[14px] font-medium text-primary hover:underline"
                     >
                       Edit
                     </Link>
@@ -96,7 +96,7 @@ export default async function ClientsPage({
                         type="submit"
                         variant="ghost"
                         size="sm"
-                        className="h-auto px-0 text-[13px] font-medium text-muted-foreground hover:bg-transparent hover:text-foreground"
+                        className="h-auto px-0 text-[14px] font-medium text-muted-foreground hover:bg-transparent hover:text-foreground"
                       >
                         {showArchived ? 'Unarchive' : 'Archive'}
                       </Button>
@@ -115,7 +115,7 @@ export default async function ClientsPage({
         />
       )}
 
-      <p className="mt-8 text-[13px] text-muted-foreground">
+      <p className="mt-8 text-[14px] text-muted-foreground">
         {showArchived ? (
           <Link href="/clients" className="underline-offset-4 hover:underline">
             Back to active clients

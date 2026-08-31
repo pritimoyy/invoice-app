@@ -54,16 +54,16 @@ export default async function ServicesPage({
           <Table>
           <TableHeader>
             <TableRow className="border-hairline hover:bg-transparent">
-              <TableHead className="h-11 px-4 text-[13px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-[14px] font-medium text-muted-foreground">
                 Name
               </TableHead>
-              <TableHead className="h-11 px-4 text-[13px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-[14px] font-medium text-muted-foreground">
                 Unit
               </TableHead>
-              <TableHead className="h-11 px-4 text-right text-[13px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-right text-[14px] font-medium text-muted-foreground">
                 Rate
               </TableHead>
-              <TableHead className="h-11 px-4 text-right text-[13px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-right text-[14px] font-medium text-muted-foreground">
                 Tax
               </TableHead>
               <TableHead className="h-11 px-4" />
@@ -80,20 +80,20 @@ export default async function ServicesPage({
                     {s.name}
                   </Link>
                 </TableCell>
-                <TableCell className="px-4 py-3.5 text-[13px] text-muted-foreground">
+                <TableCell className="px-4 py-3.5 text-[14px] text-muted-foreground">
                   {s.unit}
                 </TableCell>
-                <TableCell className="px-4 py-3.5 text-right text-[13px] tabular-nums text-foreground">
+                <TableCell className="px-4 py-3.5 text-right text-[14px] tabular-nums text-foreground">
                   {formatPaise(s.default_rate_paise, { showPaise: false })}
                 </TableCell>
-                <TableCell className="px-4 py-3.5 text-right text-[13px] tabular-nums text-muted-foreground">
+                <TableCell className="px-4 py-3.5 text-right text-[14px] tabular-nums text-muted-foreground">
                   {TAX_RATE_OPTIONS.find((o) => o.bps === s.tax_rate_bps)?.label ?? '—'}
                 </TableCell>
                 <TableCell className="px-4 py-3.5 text-right">
                   <div className="flex items-center justify-end gap-4">
                     <Link
                       href={`/services/${s.id}`}
-                      className="text-[13px] font-medium text-primary hover:underline"
+                      className="text-[14px] font-medium text-primary hover:underline"
                     >
                       Edit
                     </Link>
@@ -104,7 +104,7 @@ export default async function ServicesPage({
                         type="submit"
                         variant="ghost"
                         size="sm"
-                        className="h-auto px-0 text-[13px] font-medium text-muted-foreground hover:bg-transparent hover:text-foreground"
+                        className="h-auto px-0 text-[14px] font-medium text-muted-foreground hover:bg-transparent hover:text-foreground"
                       >
                         {showArchived ? 'Unarchive' : 'Archive'}
                       </Button>
@@ -127,7 +127,7 @@ export default async function ServicesPage({
         />
       )}
 
-      <p className="mt-8 text-[13px] text-muted-foreground">
+      <p className="mt-8 text-[14px] text-muted-foreground">
         {showArchived ? (
           <Link href="/services" className="underline-offset-4 hover:underline">
             Back to active services

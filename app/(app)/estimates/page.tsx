@@ -60,16 +60,16 @@ export default async function EstimatesPage() {
           <Table>
           <TableHeader>
             <TableRow className="border-hairline hover:bg-transparent">
-              <TableHead className="h-11 px-4 text-[13px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-[14px] font-medium text-muted-foreground">
                 Client
               </TableHead>
-              <TableHead className="h-11 px-4 text-[13px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-[14px] font-medium text-muted-foreground">
                 Date
               </TableHead>
-              <TableHead className="h-11 px-4 text-[13px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-[14px] font-medium text-muted-foreground">
                 Status
               </TableHead>
-              <TableHead className="h-11 px-4 text-right text-[13px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-right text-[14px] font-medium text-muted-foreground">
                 Total
               </TableHead>
               <TableHead className="h-11 px-4" />
@@ -88,7 +88,7 @@ export default async function EstimatesPage() {
                       {est.bill_to_name}
                     </Link>
                   </TableCell>
-                  <TableCell className="px-4 py-3.5 text-[13px] text-muted-foreground">
+                  <TableCell className="px-4 py-3.5 text-[14px] text-muted-foreground">
                     {new Date(est.issue_date).toLocaleDateString('en-IN', {
                       day: '2-digit',
                       month: 'short',
@@ -98,14 +98,14 @@ export default async function EstimatesPage() {
                   <TableCell className="px-4 py-3.5">
                     <Badge
                       variant="outline"
-                      className={`h-auto px-2 py-0.5 text-[11px] font-medium ${
+                      className={`h-auto px-2 py-0.5 text-[12px] font-medium ${
                         isConverted ? 'text-success' : 'text-muted-foreground'
                       }`}
                     >
                       {isConverted ? 'Invoiced' : est.status === 'draft' ? 'Draft' : 'Sent'}
                     </Badge>
                   </TableCell>
-                  <TableCell className="px-4 py-3.5 text-right text-[13px] tabular-nums text-foreground">
+                  <TableCell className="px-4 py-3.5 text-right text-[14px] tabular-nums text-foreground">
                     {formatPaise(est.total_paise, {
                       showPaise: false,
                       currency: est.currency,
@@ -115,7 +115,7 @@ export default async function EstimatesPage() {
                     <div className="flex items-center justify-end gap-4">
                       <Link
                         href={`/invoices/${est.id}/edit`}
-                        className="text-[13px] font-medium text-primary hover:underline"
+                        className="text-[14px] font-medium text-primary hover:underline"
                       >
                         Edit
                       </Link>

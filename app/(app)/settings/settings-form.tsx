@@ -15,7 +15,7 @@ type Profile = Database['public']['Tables']['profiles']['Row']
 const initialState: SettingsState = { error: null, saved: false }
 
 const labelClass =
-  'text-[13px] font-medium text-muted-foreground font-normal'
+  'text-[14px] font-medium text-muted-foreground font-normal'
 
 const STATE_OPTIONS = GST_STATES.map((s) => ({
   value: s.code,
@@ -127,7 +127,7 @@ export function SettingsForm({
         />
 
         <div className="flex flex-col gap-3 pt-1">
-          <label className="flex items-center gap-3 text-[13px] text-foreground">
+          <label className="flex items-center gap-3 text-[14px] text-foreground">
             <input
               type="checkbox"
               name="is_gst_registered"
@@ -137,7 +137,7 @@ export function SettingsForm({
             />
             GST registered
           </label>
-          <label className="flex items-center gap-3 text-[13px] text-foreground">
+          <label className="flex items-center gap-3 text-[14px] text-foreground">
             <input
               type="checkbox"
               name="has_lut"
@@ -225,12 +225,12 @@ export function SettingsForm({
                 alt="Current logo"
                 className="h-12 w-auto max-w-[180px] object-contain"
               />
-              <span className="text-[13px] text-muted-foreground">
+              <span className="text-[14px] text-muted-foreground">
                 Current logo
               </span>
             </div>
           ) : (
-            <p className="text-[13px] text-muted-foreground">No logo uploaded.</p>
+            <p className="text-[14px] text-muted-foreground">No logo uploaded.</p>
           )}
 
           <div className="flex flex-col gap-2">
@@ -243,9 +243,9 @@ export function SettingsForm({
               type="file"
               accept="image/png,image/jpeg"
               disabled={pending}
-              className="text-[13px] text-muted-foreground file:mr-4 file:border file:border-border file:bg-transparent file:px-3 file:py-1.5 file:text-[11px] file:uppercase file:tracking-[0.12em] file:text-foreground"
+              className="text-[14px] text-muted-foreground file:mr-4 file:border file:border-border file:bg-transparent file:px-3 file:py-1.5 file:text-[12px] file:uppercase file:tracking-[0.12em] file:text-foreground"
             />
-            <p className="text-[13px] text-muted-foreground">
+            <p className="text-[14px] text-muted-foreground">
               PNG or JPEG, under 2 MB. Those are the formats the PDF renderer
               can embed.
             </p>
@@ -263,13 +263,13 @@ export function SettingsForm({
         </Button>
 
         {state.error ? (
-          <p role="alert" className="text-[13px] text-destructive">
+          <p role="alert" className="text-[14px] text-destructive">
             {state.error}
           </p>
         ) : null}
 
         {state.saved && !state.error ? (
-          <p role="status" className="text-[13px] text-muted-foreground">
+          <p role="status" className="text-[14px] text-muted-foreground">
             Saved.
           </p>
         ) : null}

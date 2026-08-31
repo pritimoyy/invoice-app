@@ -82,7 +82,7 @@
   --secondary: #f5f5f7;
   --secondary-foreground: #1d1d1f;
   --muted: #f5f5f7;
-  --muted-foreground: #6e6e73;
+  --muted-foreground: #5a5a61;
   --accent: #eef1f6;
   --accent-foreground: #1d1d1f;
 
@@ -153,7 +153,7 @@
   --secondary: #1f1f25;
   --secondary-foreground: #f5f5f7;
   --muted: #1f1f25;
-  --muted-foreground: #98989f;
+  --muted-foreground: #a3a3ab;
   --accent: #26262e;
   --accent-foreground: #f5f5f7;
 
@@ -208,8 +208,12 @@
   }
   html {
     @apply font-sans;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    /* Deliberately NOT -webkit-font-smoothing: antialiased. On macOS that
+       switches off subpixel rendering and thins every stroke — it's the
+       single biggest reason UI text reads as washed out and light. The
+       browser default renders heavier and more legible, which matters more
+       here than the slightly crisper look antialiasing gives on dark
+       backgrounds. */
   }
   /* Headlines tighten further, the way SF Pro Display does above ~20px. */
   h1,

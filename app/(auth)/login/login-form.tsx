@@ -15,7 +15,7 @@ const fieldClass =
   'focus-visible:ring-ring/40 disabled:opacity-50'
 
 const labelClass =
-  'block text-[13px] font-medium text-muted-foreground'
+  'block text-[14px] font-medium text-muted-foreground'
 
 export function LoginForm() {
   const [state, formAction, pending] = useActionState(login, initialState)
@@ -54,7 +54,7 @@ export function LoginForm() {
       </div>
 
       {state.error ? (
-        <p role="alert" className="text-[13px] text-destructive">
+        <p role="alert" className="text-[14px] text-destructive">
           {state.error}
         </p>
       ) : null}

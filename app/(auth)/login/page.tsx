@@ -14,7 +14,7 @@ export default function LoginPage() {
           <h1 className="text-[28px] font-semibold tracking-[-0.02em] text-foreground">
             Invoices
           </h1>
-          <p className="mt-1 text-[13px] text-muted-foreground">
+          <p className="mt-1 text-[14px] text-muted-foreground">
             Sign in to continue.
           </p>
         </header>

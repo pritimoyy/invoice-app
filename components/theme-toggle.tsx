@@ -99,7 +99,7 @@ export function ThemeToggle() {
           aria-label={o.label}
           title={o.label}
           onClick={() => setStoredTheme(o.value)}
-          className={`flex size-7 items-center justify-center rounded-full text-[13px] transition-colors ${
+          className={`flex size-7 items-center justify-center rounded-full text-[14px] transition-colors ${
             theme === o.value
               ? 'bg-surface text-foreground shadow-[var(--elevation-1)]'
               : 'text-muted-foreground hover:text-foreground'

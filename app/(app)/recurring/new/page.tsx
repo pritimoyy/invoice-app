@@ -82,7 +82,7 @@ export default async function NewRecurringPage() {
           </div>
         </form>
       ) : (
-        <p className="text-[13px] text-muted-foreground">
+        <p className="text-[14px] text-muted-foreground">
           You need a sent invoice to repeat — and every one you have is already on a
           schedule.{' '}
           <Link href="/invoices" className="text-foreground underline-offset-4 hover:underline">

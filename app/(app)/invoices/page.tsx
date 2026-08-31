@@ -72,16 +72,16 @@ export default async function InvoicesPage() {
           <Table>
           <TableHeader>
             <TableRow className="border-hairline hover:bg-transparent">
-              <TableHead className="h-11 px-4 text-[13px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-[14px] font-medium text-muted-foreground">
                 Client
               </TableHead>
-              <TableHead className="h-11 px-4 text-[13px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-[14px] font-medium text-muted-foreground">
                 Date
               </TableHead>
-              <TableHead className="h-11 px-4 text-[13px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-[14px] font-medium text-muted-foreground">
                 Status
               </TableHead>
-              <TableHead className="h-11 px-4 text-right text-[13px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-right text-[14px] font-medium text-muted-foreground">
                 Total
               </TableHead>
               <TableHead className="h-11 px-4" />
@@ -108,7 +108,7 @@ export default async function InvoicesPage() {
                       {inv.bill_to_name}
                     </Link>
                   </TableCell>
-                  <TableCell className="px-4 py-3.5 text-[13px] text-muted-foreground">
+                  <TableCell className="px-4 py-3.5 text-[14px] text-muted-foreground">
                     {new Date(inv.issue_date).toLocaleDateString('en-IN', {
                       day: '2-digit',
                       month: 'short',
@@ -122,7 +122,7 @@ export default async function InvoicesPage() {
                       displayStatus={displayStatus}
                     />
                   </TableCell>
-                  <TableCell className="px-4 py-3.5 text-right text-[13px] tabular-nums text-foreground">
+                  <TableCell className="px-4 py-3.5 text-right text-[14px] tabular-nums text-foreground">
                     {formatPaise(inv.total_paise, {
                       showPaise: false,
                       currency: inv.currency,
@@ -131,7 +131,7 @@ export default async function InvoicesPage() {
                   <TableCell className="px-4 py-3.5 text-right">
                     <Link
                       href={`/invoices/${inv.id}/edit`}
-                      className="text-[13px] font-medium text-primary hover:underline"
+                      className="text-[14px] font-medium text-primary hover:underline"
                     >
                       Edit
                     </Link>
@@ -151,21 +151,21 @@ export default async function InvoicesPage() {
 
       {financialYears.length > 0 ? (
         <div className="mt-10 flex flex-wrap items-baseline gap-x-4 gap-y-2 border-t border-border pt-6">
-          <span className="text-[13px] font-medium text-muted-foreground">
+          <span className="text-[14px] font-medium text-muted-foreground">
             Export for your CA
           </span>
           {financialYears.map((fy) => (
             <a
               key={fy}
               href={`/api/export/invoices?fy=${fy}`}
-              className="text-[13px] tabular-nums text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+              className="text-[14px] tabular-nums text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
             >
               FY {fy}
             </a>
           ))}
           <a
             href="/api/export/invoices"
-            className="text-[13px] text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+            className="text-[14px] text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             All
           </a>

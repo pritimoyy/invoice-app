@@ -64,7 +64,7 @@ export default async function RecurringPage() {
         </Button>
       </div>
 
-      <p className="mt-3 max-w-xl text-[13px] leading-relaxed text-muted-foreground">
+      <p className="mt-3 max-w-xl text-[14px] leading-relaxed text-muted-foreground">
         Nothing sends itself. When one is due you press Generate, which copies the
         invoice into a new draft for you to check and send.
       </p>
@@ -74,16 +74,16 @@ export default async function RecurringPage() {
           <Table>
           <TableHeader>
             <TableRow className="border-hairline hover:bg-transparent">
-              <TableHead className="h-11 px-4 text-[13px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-[14px] font-medium text-muted-foreground">
                 Repeats
               </TableHead>
-              <TableHead className="h-11 px-4 text-[13px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-[14px] font-medium text-muted-foreground">
                 Every
               </TableHead>
-              <TableHead className="h-11 px-4 text-[13px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-[14px] font-medium text-muted-foreground">
                 Next
               </TableHead>
-              <TableHead className="h-11 px-4 text-right text-[13px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-right text-[14px] font-medium text-muted-foreground">
                 Amount
               </TableHead>
               <TableHead className="h-11 px-4" />
@@ -103,23 +103,23 @@ export default async function RecurringPage() {
                       {source?.bill_to_name ?? '—'}
                     </Link>
                   </TableCell>
-                  <TableCell className="px-4 py-3.5 text-[13px] text-muted-foreground">
+                  <TableCell className="px-4 py-3.5 text-[14px] text-muted-foreground">
                     {CADENCE_LABEL[s.cadence]}
                   </TableCell>
-                  <TableCell className="px-4 py-3.5 text-[13px]">
+                  <TableCell className="px-4 py-3.5 text-[14px]">
                     <span className={isDue ? 'text-destructive' : 'text-muted-foreground'}>
                       {formatDate(s.next_due_on)}
                     </span>
                     {!s.is_active ? (
                       <Badge
                         variant="outline"
-                        className="ml-2 h-auto px-2 py-0.5 text-[11px] font-medium text-muted-foreground"
+                        className="ml-2 h-auto px-2 py-0.5 text-[12px] font-medium text-muted-foreground"
                       >
                         Paused
                       </Badge>
                     ) : null}
                   </TableCell>
-                  <TableCell className="px-4 py-3.5 text-right text-[13px] tabular-nums text-foreground">
+                  <TableCell className="px-4 py-3.5 text-right text-[14px] tabular-nums text-foreground">
                     {source
                       ? formatPaise(source.total_paise, {
                           showPaise: false,

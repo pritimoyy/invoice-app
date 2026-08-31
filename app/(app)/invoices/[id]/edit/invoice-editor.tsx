@@ -93,7 +93,7 @@ const toolbarFieldClass =
   'focus-visible:ring-[3px] focus-visible:ring-ring/40 ' +
   'disabled:cursor-not-allowed disabled:opacity-50'
 
-const toolbarLabelClass = 'text-[13px] font-medium text-muted-foreground'
+const toolbarLabelClass = 'text-[14px] font-medium text-muted-foreground'
 
 function newLineItem(defaultSacCode: string, defaultTaxRateBps: number): EditableLineItem {
   return {
@@ -635,7 +635,7 @@ export function InvoiceEditor({
           <button
             type="button"
             onClick={() => setView('edit')}
-            className={`rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors ${
+            className={`rounded-full px-4 py-1.5 text-[14px] font-medium transition-colors ${
               view === 'edit'
                 ? 'bg-surface text-foreground shadow-[var(--elevation-1)]'
                 : 'text-muted-foreground hover:text-foreground'
@@ -646,7 +646,7 @@ export function InvoiceEditor({
           <button
             type="button"
             onClick={() => setView('pdf')}
-            className={`rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors ${
+            className={`rounded-full px-4 py-1.5 text-[14px] font-medium transition-colors ${
               view === 'pdf'
                 ? 'bg-surface text-foreground shadow-[var(--elevation-1)]'
                 : 'text-muted-foreground hover:text-foreground'
@@ -675,7 +675,7 @@ export function InvoiceEditor({
 
       <div className="mx-auto flex w-full max-w-4xl flex-wrap items-center gap-4">
         {locked ? (
-          <p className="text-[13px] text-muted-foreground">
+          <p className="text-[14px] text-muted-foreground">
             Sent — this invoice is locked from further edits.
           </p>
         ) : (
@@ -699,12 +699,12 @@ export function InvoiceEditor({
           </>
         )}
         {error ? (
-          <p role="alert" className="text-[13px] text-destructive">
+          <p role="alert" className="text-[14px] text-destructive">
             {error}
           </p>
         ) : null}
         {saved && !error && !locked ? (
-          <p role="status" className="text-[13px] text-muted-foreground">
+          <p role="status" className="text-[14px] text-muted-foreground">
             Saved.
           </p>
         ) : null}

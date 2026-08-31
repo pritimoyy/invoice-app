@@ -41,7 +41,7 @@ export default async function EditClientPage({
           {client.is_archived ? (
             <Badge
               variant="outline"
-              className="h-auto px-2 py-0.5 text-[11px] font-medium text-muted-foreground"
+              className="h-auto px-2 py-0.5 text-[12px] font-medium text-muted-foreground"
             >
               Archived
             </Badge>
@@ -59,7 +59,7 @@ export default async function EditClientPage({
             type="submit"
             variant="ghost"
             size="sm"
-            className="h-auto px-0 text-[13px] font-medium text-muted-foreground hover:bg-transparent hover:text-foreground"
+            className="h-auto px-0 text-[14px] font-medium text-muted-foreground hover:bg-transparent hover:text-foreground"
           >
             {client.is_archived ? 'Unarchive' : 'Archive'}
           </Button>

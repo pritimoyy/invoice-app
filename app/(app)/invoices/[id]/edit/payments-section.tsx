@@ -34,7 +34,7 @@ const METHOD_OPTIONS: { value: PaymentMethod; label: string }[] = [
   { value: 'other', label: 'Other' },
 ]
 
-const fieldLabel = 'text-[13px] font-medium text-muted-foreground'
+const fieldLabel = 'text-[14px] font-medium text-muted-foreground'
 const fieldInput =
   'h-10 rounded-xl border border-transparent bg-secondary px-3 text-[15px] ' +
   'text-foreground outline-none transition-colors focus-visible:border-ring ' +
@@ -123,7 +123,7 @@ export function PaymentsSection({
     <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 pt-2">
       <div className="flex flex-wrap items-baseline justify-between gap-4">
         <h2 className="text-[17px] font-semibold text-foreground">Payments</h2>
-        <div className="flex items-baseline gap-6 text-[13px]">
+        <div className="flex items-baseline gap-6 text-[14px]">
           <span className="text-muted-foreground">
             Paid <span className="font-semibold tabular-nums text-foreground">{formatPaise(paidPaise, { currency })}</span>
           </span>
@@ -136,7 +136,7 @@ export function PaymentsSection({
             </span>
           </span>
           {isOverdue ? (
-            <span className="rounded-full bg-destructive/10 px-2 py-0.5 text-[13px] font-medium text-destructive">Overdue</span>
+            <span className="rounded-full bg-destructive/10 px-2 py-0.5 text-[14px] font-medium text-destructive">Overdue</span>
           ) : null}
         </div>
       </div>
@@ -146,7 +146,7 @@ export function PaymentsSection({
           {payments.map((p) => (
             <div
               key={p.id}
-              className={`flex items-center gap-4 border-b border-hairline py-2.5 text-[13px] ${
+              className={`flex items-center gap-4 border-b border-hairline py-2.5 text-[14px] ${
                 editingId === p.id ? 'bg-secondary' : ''
               }`}
             >
@@ -159,7 +159,7 @@ export function PaymentsSection({
               </span>
               <span className="flex-1 text-muted-foreground">{p.reference || '—'}</span>
               {p.tds_paise > 0 ? (
-                <span className="text-[13px] text-muted-foreground">
+                <span className="text-[14px] text-muted-foreground">
                   TDS {formatPaise(p.tds_paise, { currency })}
                 </span>
               ) : null}
@@ -167,7 +167,7 @@ export function PaymentsSection({
                 type="button"
                 onClick={() => startEditing(p)}
                 disabled={pending}
-                className="text-[13px] font-medium text-primary hover:underline disabled:opacity-30"
+                className="text-[14px] font-medium text-primary hover:underline disabled:opacity-30"
               >
                 Edit
               </button>
@@ -183,7 +183,7 @@ export function PaymentsSection({
           ))}
         </div>
       ) : (
-        <p className="text-[13px] text-muted-foreground">No payments recorded yet.</p>
+        <p className="text-[14px] text-muted-foreground">No payments recorded yet.</p>
       )}
 
       <div className="flex flex-wrap items-end gap-4 border-t border-hairline pt-5">
@@ -259,14 +259,14 @@ export function PaymentsSection({
             type="button"
             onClick={resetForm}
             disabled={pending}
-            className="text-[13px] font-medium text-primary hover:underline disabled:opacity-30"
+            className="text-[14px] font-medium text-primary hover:underline disabled:opacity-30"
           >
             Cancel edit
           </button>
         ) : null}
       </div>
       {error ? (
-        <p role="alert" className="text-[13px] text-destructive">
+        <p role="alert" className="text-[14px] text-destructive">
           {error}
         </p>
       ) : null}

@@ -51,7 +51,7 @@ export default async function NewEstimatePage() {
           </div>
         </form>
       ) : (
-        <p className="text-[13px] text-muted-foreground">
+        <p className="text-[14px] text-muted-foreground">
           You need a client before you can start an estimate.{' '}
           <Link
             href="/clients/new"
