@@ -11,6 +11,8 @@ import { signOut } from './actions'
 const LINKS = [
   { href: '/dashboard', label: 'Dashboard' },
   { href: '/clients', label: 'Clients' },
+  { href: '/services', label: 'Services' },
+  { href: '/invoices', label: 'Invoices' },
   { href: '/settings', label: 'Settings' },
 ]
 
@@ -25,9 +27,12 @@ export function AppNav({ email }: { email: string | undefined }) {
     <header className="border-b border-neutral-200 bg-white">
       <div className="mx-auto flex h-14 w-full max-w-4xl items-center justify-between gap-6 px-6">
         <nav className="flex items-center gap-6">
-          <span className="text-[14px] font-medium tracking-tight text-neutral-900">
+          <Link
+            href="/dashboard"
+            className="text-[14px] font-medium tracking-tight text-neutral-900"
+          >
             Invoices
-          </span>
+          </Link>
           {LINKS.map((link) => (
             <Link
               key={link.href}

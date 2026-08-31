@@ -1,3 +1,5 @@
+import type { GstTreatment } from '@/lib/tax'
+
 /**
  * Shared shape for the three "Turn 3" invoice templates (3a Inverted,
  * 3b Bento, 3d Bento II), recreated from the Claude Design canvas.
@@ -22,6 +24,7 @@ export type InvoiceTotals = {
   discount: string
   cgst: string
   sgst: string
+  igst: string
   roundOff: string
   total: string
   words: string
@@ -32,6 +35,10 @@ export type InvoiceTemplateData = {
   issuedDate: string
   dueDate: string
   placeOfSupply: string
+  // Drives which of CGST+SGST / IGST / neither gets printed — see
+  // lib/tax.ts. Templates do no tax computation of their own; this is
+  // purely "which already-computed line, if any, to show."
+  gstTreatment: GstTreatment
   supplier: {
     name: string
     addressLines: string[]

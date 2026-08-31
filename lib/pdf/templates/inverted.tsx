@@ -1,6 +1,5 @@
 import { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
 
-import '../fonts/register'
 import { paginateRows, type PageCapacity } from '../paginate'
 import type { InvoiceLineRow, InvoiceTemplateData } from '../types'
 
@@ -128,7 +127,6 @@ const styles = StyleSheet.create({
   },
   colN: { width: 20 },
   colItem: { flex: 1, paddingRight: 12 },
-  colSac: { width: 46 },
   colQty: { width: 52, textAlign: 'right' },
   colRate: { width: 60, textAlign: 'right' },
   colAmt: { width: 68, textAlign: 'right' },
@@ -141,7 +139,7 @@ const styles = StyleSheet.create({
   },
   rowN: { width: 20, opacity: 0.5, ...tnum },
   rowDesc: { flex: 1, paddingRight: 12 },
-  rowSac: { width: 46, fontSize: 8, opacity: 0.6, ...tnum },
+  rowDescSub: { fontSize: 7.5, opacity: 0.55, marginTop: 2 },
   rowQty: { width: 52, textAlign: 'right', ...tnum },
   rowRate: { width: 60, textAlign: 'right', ...tnum },
   rowAmt: { width: 68, textAlign: 'right', fontWeight: 600, ...tnum },
@@ -346,21 +344,31 @@ export function InvoiceInverted({
           <View style={styles.tableHead}>
             <Text style={styles.colN}>#</Text>
             <Text style={styles.colItem}>Item</Text>
-            <Text style={styles.colSac}>SAC</Text>
             <Text style={styles.colQty}>Qty</Text>
             <Text style={styles.colRate}>Rate</Text>
             <Text style={styles.colAmt}>Amount</Text>
           </View>
-          {p.rows.map((r) => (
-            <View key={r.n} style={styles.row}>
-              <Text style={styles.rowN}>{r.n}</Text>
-              <Text style={styles.rowDesc}>{r.desc}</Text>
-              <Text style={styles.rowSac}>{r.sac}</Text>
-              <Text style={styles.rowQty}>{r.qty}</Text>
-              <Text style={styles.rowRate}>{r.rate}</Text>
-              <Text style={styles.rowAmt}>{r.amt}</Text>
-            </View>
-          ))}
+          {p.rows.map((r) => {
+            const [headline, ...subLines] = r.desc.split('\n')
+            return (
+              <View key={r.n} style={styles.row}>
+                <Text style={styles.rowN}>{r.n}</Text>
+                <View style={styles.rowDesc}>
+                  <Text>{headline}</Text>
+                  {subLines
+                    .filter((line) => line.trim() !== '')
+                    .map((line, idx) => (
+                      <Text key={idx} style={styles.rowDescSub}>
+                        · {line}
+                      </Text>
+                    ))}
+                </View>
+                <Text style={styles.rowQty}>{r.qty}</Text>
+                <Text style={styles.rowRate}>{r.rate}</Text>
+                <Text style={styles.rowAmt}>{r.amt}</Text>
+              </View>
+            )
+          })}
           {p.continued && (
             <Text style={styles.continued}>Continued — page {p.next}</Text>
           )}
@@ -385,14 +393,24 @@ export function InvoiceInverted({
                     <Text style={styles.totalsLabel}>Discount</Text>
                     <Text style={styles.totalsValue}>{totals.discount}</Text>
                   </View>
-                  <View style={styles.totalsRow}>
-                    <Text style={styles.totalsLabel}>CGST 9%</Text>
-                    <Text style={styles.totalsValue}>{totals.cgst}</Text>
-                  </View>
-                  <View style={styles.totalsRow}>
-                    <Text style={styles.totalsLabel}>SGST 9%</Text>
-                    <Text style={styles.totalsValue}>{totals.sgst}</Text>
-                  </View>
+                  {data.gstTreatment === 'intra_state' && (
+                    <>
+                      <View style={styles.totalsRow}>
+                        <Text style={styles.totalsLabel}>CGST</Text>
+                        <Text style={styles.totalsValue}>{totals.cgst}</Text>
+                      </View>
+                      <View style={styles.totalsRow}>
+                        <Text style={styles.totalsLabel}>SGST</Text>
+                        <Text style={styles.totalsValue}>{totals.sgst}</Text>
+                      </View>
+                    </>
+                  )}
+                  {data.gstTreatment === 'inter_state' && (
+                    <View style={styles.totalsRow}>
+                      <Text style={styles.totalsLabel}>IGST</Text>
+                      <Text style={styles.totalsValue}>{totals.igst}</Text>
+                    </View>
+                  )}
                   <View style={styles.totalsRow}>
                     <Text style={styles.totalsLabel}>Round off</Text>
                     <Text style={styles.totalsValue}>{totals.roundOff}</Text>

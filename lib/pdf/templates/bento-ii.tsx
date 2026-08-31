@@ -1,6 +1,5 @@
 import { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
 
-import '../fonts/register'
 import { paginateRows, type PageCapacity } from '../paginate'
 import type { InvoiceLineRow, InvoiceTemplateData } from '../types'
 
@@ -95,7 +94,6 @@ const styles = StyleSheet.create({
   },
   colN: { width: 18 },
   colItem: { flex: 1, paddingRight: 10 },
-  colSac: { width: 40 },
   colQty: { width: 42, textAlign: 'right' },
   colRate: { width: 48, textAlign: 'right' },
   colAmt: { width: 56, textAlign: 'right' },
@@ -108,7 +106,7 @@ const styles = StyleSheet.create({
   },
   rowN: { width: 18, opacity: 0.45, ...tnum },
   rowDesc: { flex: 1, paddingRight: 10 },
-  rowSac: { width: 40, fontSize: 8, opacity: 0.7, ...tnum },
+  rowDescSub: { fontSize: 7.5, opacity: 0.6, marginTop: 2 },
   rowQty: { width: 42, textAlign: 'right', ...tnum },
   rowRate: { width: 48, textAlign: 'right', ...tnum },
   rowAmt: { width: 56, textAlign: 'right', fontWeight: 500, ...tnum },
@@ -284,21 +282,31 @@ export function InvoiceBentoII({
               <View style={styles.tableHead}>
                 <Text style={styles.colN}>#</Text>
                 <Text style={styles.colItem}>Description</Text>
-                <Text style={styles.colSac}>SAC</Text>
                 <Text style={styles.colQty}>Qty</Text>
                 <Text style={styles.colRate}>Rate</Text>
                 <Text style={styles.colAmt}>Amount</Text>
               </View>
-              {p.rows.map((r) => (
-                <View key={r.n} style={styles.row}>
-                  <Text style={styles.rowN}>{r.n}</Text>
-                  <Text style={styles.rowDesc}>{r.desc}</Text>
-                  <Text style={styles.rowSac}>{r.sac}</Text>
-                  <Text style={styles.rowQty}>{r.qty}</Text>
-                  <Text style={styles.rowRate}>{r.rate}</Text>
-                  <Text style={styles.rowAmt}>{r.amt}</Text>
-                </View>
-              ))}
+              {p.rows.map((r) => {
+                const [headline, ...subLines] = r.desc.split('\n')
+                return (
+                  <View key={r.n} style={styles.row}>
+                    <Text style={styles.rowN}>{r.n}</Text>
+                    <View style={styles.rowDesc}>
+                      <Text>{headline}</Text>
+                      {subLines
+                        .filter((line) => line.trim() !== '')
+                        .map((line, idx) => (
+                          <Text key={idx} style={styles.rowDescSub}>
+                            · {line}
+                          </Text>
+                        ))}
+                    </View>
+                    <Text style={styles.rowQty}>{r.qty}</Text>
+                    <Text style={styles.rowRate}>{r.rate}</Text>
+                    <Text style={styles.rowAmt}>{r.amt}</Text>
+                  </View>
+                )
+              })}
               <View style={styles.spacer} />
               {p.continued && (
                 <Text style={styles.continued}>
@@ -323,18 +331,30 @@ export function InvoiceBentoII({
                         {totals.discount}
                       </Text>
                     </View>
-                    <View style={styles.breakdownRow}>
-                      <Text style={styles.breakdownLabel}>CGST 9%</Text>
-                      <Text style={styles.breakdownValue}>
-                        {totals.cgst}
-                      </Text>
-                    </View>
-                    <View style={styles.breakdownRow}>
-                      <Text style={styles.breakdownLabel}>SGST 9%</Text>
-                      <Text style={styles.breakdownValue}>
-                        {totals.sgst}
-                      </Text>
-                    </View>
+                    {data.gstTreatment === 'intra_state' && (
+                      <>
+                        <View style={styles.breakdownRow}>
+                          <Text style={styles.breakdownLabel}>CGST</Text>
+                          <Text style={styles.breakdownValue}>
+                            {totals.cgst}
+                          </Text>
+                        </View>
+                        <View style={styles.breakdownRow}>
+                          <Text style={styles.breakdownLabel}>SGST</Text>
+                          <Text style={styles.breakdownValue}>
+                            {totals.sgst}
+                          </Text>
+                        </View>
+                      </>
+                    )}
+                    {data.gstTreatment === 'inter_state' && (
+                      <View style={styles.breakdownRow}>
+                        <Text style={styles.breakdownLabel}>IGST</Text>
+                        <Text style={styles.breakdownValue}>
+                          {totals.igst}
+                        </Text>
+                      </View>
+                    )}
                     <View style={styles.breakdownRow}>
                       <Text style={styles.breakdownLabel}>Round off</Text>
                       <Text style={styles.breakdownValue}>
