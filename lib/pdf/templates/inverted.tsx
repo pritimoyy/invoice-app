@@ -236,6 +236,7 @@ const styles = StyleSheet.create({
     textDecoration: 'none',
   },
   notes: { marginTop: 10, fontSize: 8, lineHeight: 1.5, opacity: 0.65 },
+  declarations: { marginTop: 8, fontSize: 7.5, lineHeight: 1.5, opacity: 0.75 },
   paymentTerms: {
     fontSize: 8,
     fontWeight: 600,
@@ -469,6 +470,13 @@ export function InvoiceInverted({
                   <Text style={styles.paymentTerms}>
                     TERMS: {data.payment.termsLabel.toUpperCase()}
                   </Text>
+                  {(data.exportDeclaration || data.reverseChargeNote || data.exchangeRateNote) && (
+                    <Text style={styles.declarations}>
+                      {[data.exportDeclaration, data.reverseChargeNote, data.exchangeRateNote]
+                        .filter(Boolean)
+                        .join('  ')}
+                    </Text>
+                  )}
                 </View>
                 <View style={styles.dueCol}>
                   <View style={styles.paymentLine}>

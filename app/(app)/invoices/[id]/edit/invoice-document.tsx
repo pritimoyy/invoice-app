@@ -57,6 +57,14 @@ export type InvoiceDocumentProps = {
   onNotesChange: (v: string) => void
   terms: string
   onTermsChange: (v: string) => void
+  /** From the profile — gates whether the export LUT line can be printed. */
+  hasLut: boolean
+  reverseCharge: boolean
+  onReverseChargeChange: (v: boolean) => void
+  exchangeRate: string
+  onExchangeRateChange: (v: string) => void
+  internalMemo: string
+  onInternalMemoChange: (v: string) => void
 }
 
 // A sentinel, not a real service id — uuids never collide with it, so the
@@ -105,6 +113,13 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
     onNotesChange,
     terms,
     onTermsChange,
+    hasLut,
+    reverseCharge,
+    onReverseChargeChange,
+    exchangeRate,
+    onExchangeRateChange,
+    internalMemo,
+    onInternalMemoChange,
   } = props
 
   // Enter-to-add-a-line works fine, but nothing in the UI says so once the
@@ -426,6 +441,50 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
         </div>
       </div>
 
+      <div className="flex flex-col gap-4 border-t border-neutral-200 pt-6 sm:flex-row sm:items-start sm:gap-10">
+        <label className="flex items-start gap-2.5 text-[13px] text-neutral-700">
+          <input
+            type="checkbox"
+            checked={reverseCharge}
+            onChange={(e) => onReverseChargeChange(e.target.checked)}
+            className="mt-0.5 accent-neutral-900 disabled:cursor-not-allowed disabled:opacity-50"
+          />
+          <span>
+            Reverse charge
+            <span className="mt-0.5 block text-[11px] text-neutral-400">
+              Prints &ldquo;Tax payable under reverse charge.&rdquo;
+            </span>
+          </span>
+        </label>
+
+        {currency !== 'INR' ? (
+          <div className="flex flex-col gap-1.5">
+            <label className={microLabel} htmlFor="doc-fx">
+              Exchange rate to INR
+            </label>
+            <input
+              id="doc-fx"
+              value={exchangeRate}
+              onChange={(e) => onExchangeRateChange(e.target.value)}
+              placeholder="83.500000"
+              inputMode="decimal"
+              className={`${fieldClass} w-36 pb-1 text-[14px] tabular-nums`}
+            />
+            <p className="text-[11px] text-neutral-400">
+              1 {currency} = this many rupees, printed for your accountant.
+            </p>
+          </div>
+        ) : null}
+      </div>
+
+      {gstTreatment === 'export' && !hasLut ? (
+        <p className="border-l-2 border-red-700 pl-3 text-[13px] leading-relaxed text-red-700">
+          This invoice is zero-rated as an export, but no LUT is recorded in
+          Settings — so the Letter of Undertaking declaration can&apos;t be printed.
+          Either add your LUT in Settings or choose a different tax treatment.
+        </p>
+      ) : null}
+
       <div className="flex flex-col gap-1.5 border-t border-neutral-200 pt-6">
         <label className={microLabel} htmlFor="doc-terms">
           Terms
@@ -441,6 +500,20 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
         <p className="text-[11px] text-neutral-400">
           Printed on the invoice if set, otherwise defaults to your standard terms.
         </p>
+      </div>
+
+      <div className="flex flex-col gap-1.5 border-t border-dashed border-neutral-300 pt-6">
+        <label className={microLabel} htmlFor="doc-memo">
+          Internal memo — never printed
+        </label>
+        <textarea
+          id="doc-memo"
+          rows={2}
+          value={internalMemo}
+          onChange={(e) => onInternalMemoChange(e.target.value)}
+          placeholder="Only you see this — chase notes, what was agreed on the call…"
+          className={`${fieldClass} w-full resize-y pb-1 text-[14px] leading-relaxed text-neutral-700`}
+        />
       </div>
     </div>
   )

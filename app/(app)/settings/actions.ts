@@ -110,6 +110,7 @@ export async function saveProfile(
 
     invoice_prefix: field(formData, 'invoice_prefix') ?? 'INV',
     default_terms_days: termsDays,
+    default_template: field(formData, 'default_template') ?? 'inverted',
     notes_default: field(formData, 'notes_default'),
 
     logo_path: logoPath,

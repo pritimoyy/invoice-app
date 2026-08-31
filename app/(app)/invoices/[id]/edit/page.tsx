@@ -158,6 +158,7 @@ export default async function EditInvoicePage({
           bankIfsc: profile?.bank_ifsc ?? '',
           upiId: profile?.upi_id ?? '',
           defaultTermsDays: profile?.default_terms_days ?? 15,
+          hasLut: profile?.has_lut ?? false,
         }}
         defaultSacCode={profile?.default_sac_code ?? ''}
         initial={{
@@ -172,6 +173,9 @@ export default async function EditInvoicePage({
           discount: paiseToEditableString(invoice.discount_paise),
           notes: invoice.notes ?? '',
           terms: invoice.terms ?? '',
+          reverseCharge: invoice.reverse_charge,
+          exchangeRate: invoice.exchange_rate != null ? String(invoice.exchange_rate) : '',
+          internalMemo: invoice.internal_memo ?? '',
           items: (items ?? []).map((item) => ({
             description: item.description,
             sacCode: item.sac_code ?? '',

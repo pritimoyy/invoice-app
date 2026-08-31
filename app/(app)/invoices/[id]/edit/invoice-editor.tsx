@@ -51,6 +51,7 @@ type ProfileDetail = {
   bankIfsc: string
   upiId: string
   defaultTermsDays: number
+  hasLut: boolean
 }
 
 type ServiceOption = {
@@ -72,6 +73,19 @@ const TREATMENT_OPTIONS: { value: GstTreatment; label: string }[] = [
 const CURRENCY_OPTIONS = ['INR', 'USD', 'EUR', 'GBP']
 
 const PREVIEW_DEBOUNCE_MS = 500
+
+/**
+ * An exchange rate is a rate, not money — the one numeric in this app that
+ * is legitimately not paise (CLAUDE.md), so it is parsed as a plain float
+ * rather than through lib/money.ts. Blank or nonsense means "not recorded"
+ * rather than zero, which would read as a real rate of zero.
+ */
+function parseExchangeRate(input: string): number | null {
+  const trimmed = input.trim()
+  if (trimmed === '') return null
+  const value = Number(trimmed)
+  return Number.isFinite(value) && value > 0 ? value : null
+}
 
 const toolbarFieldClass =
   'h-auto rounded-none border-0 border-b border-neutral-300 bg-transparent px-0 py-1.5 text-[13px] ' +
@@ -131,6 +145,9 @@ export function InvoiceEditor({
     discount: string
     notes: string
     terms: string
+    reverseCharge: boolean
+    exchangeRate: string
+    internalMemo: string
     items: InitialLineItemLike[]
   }
 }) {
@@ -143,6 +160,9 @@ export function InvoiceEditor({
   const [discount, setDiscount] = useState(initial.discount)
   const [notes, setNotes] = useState(initial.notes)
   const [terms, setTerms] = useState(initial.terms)
+  const [reverseCharge, setReverseCharge] = useState(initial.reverseCharge)
+  const [exchangeRate, setExchangeRate] = useState(initial.exchangeRate)
+  const [internalMemo, setInternalMemo] = useState(initial.internalMemo)
   const [view, setView] = useState<'edit' | 'pdf'>('edit')
   const [items, setItems] = useState<EditableLineItem[]>(() =>
     initial.items.length > 0
@@ -195,6 +215,21 @@ export function InvoiceEditor({
 
   function handleTermsChange(v: string) {
     setTerms(v)
+    setSaved(false)
+  }
+
+  function handleReverseChargeChange(v: boolean) {
+    setReverseCharge(v)
+    setSaved(false)
+  }
+
+  function handleExchangeRateChange(v: string) {
+    setExchangeRate(v)
+    setSaved(false)
+  }
+
+  function handleInternalMemoChange(v: string) {
+    setInternalMemo(v)
     setSaved(false)
   }
 
@@ -296,6 +331,9 @@ export function InvoiceEditor({
       gstTreatment,
       currency,
       notes,
+      hasLut: profile.hasLut,
+      reverseCharge,
+      exchangeRate: parseExchangeRate(exchangeRate),
       supplier: {
         name: profile.tradeName || profile.legalName,
         addressLines: supplierAddressLines,
@@ -350,6 +388,8 @@ export function InvoiceEditor({
     gstTreatment,
     currency,
     notes,
+    reverseCharge,
+    exchangeRate,
     issueDate,
     dueDate,
     terms,
@@ -425,6 +465,9 @@ export function InvoiceEditor({
         discountPaise: result.discountPaise,
         notes,
         terms,
+        reverseCharge,
+        exchangeRate: parseExchangeRate(exchangeRate),
+        internalMemo,
         items: result.items,
       })
       if (saveResult.error) {
@@ -465,6 +508,9 @@ export function InvoiceEditor({
         discountPaise: result.discountPaise,
         notes,
         terms,
+        reverseCharge,
+        exchangeRate: parseExchangeRate(exchangeRate),
+        internalMemo,
         items: result.items,
       })
       if (saveResult.error) {
@@ -507,6 +553,13 @@ export function InvoiceEditor({
     onNotesChange: handleNotesChange,
     terms,
     onTermsChange: handleTermsChange,
+    hasLut: profile.hasLut,
+    reverseCharge,
+    onReverseChargeChange: handleReverseChargeChange,
+    exchangeRate,
+    onExchangeRateChange: handleExchangeRateChange,
+    internalMemo,
+    onInternalMemoChange: handleInternalMemoChange,
   }
 
   return (

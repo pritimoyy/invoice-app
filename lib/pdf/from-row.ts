@@ -33,6 +33,9 @@ export function buildInvoiceDataFromRow(
     gstTreatment: invoice.gst_treatment,
     currency: invoice.currency,
     notes: invoice.notes ?? '',
+    hasLut: profile?.has_lut ?? false,
+    reverseCharge: invoice.reverse_charge,
+    exchangeRate: invoice.exchange_rate,
     supplier: {
       name: profile?.trade_name || profile?.legal_name || '',
       addressLines: supplierAddressLines,

@@ -213,6 +213,13 @@ export default async function PublicInvoicePage({
             <p className="mt-2 text-[13px] text-neutral-500">
               Terms: {data.payment.termsLabel}
             </p>
+            {(data.exportDeclaration || data.reverseChargeNote || data.exchangeRateNote) ? (
+              <p className="mt-3 text-[12px] leading-relaxed text-neutral-500">
+                {[data.exportDeclaration, data.reverseChargeNote, data.exchangeRateNote]
+                  .filter(Boolean)
+                  .join('  ')}
+              </p>
+            ) : null}
             {data.notes !== '' ? (
               <p className="mt-4 whitespace-pre-line text-[13px] leading-relaxed text-neutral-500">
                 {data.notes}

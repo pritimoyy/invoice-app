@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
     textDecoration: 'none',
   },
   notes: { marginTop: 6, fontSize: 8, lineHeight: 1.6, opacity: 0.7 },
+  declarations: { marginTop: 6, fontSize: 7.5, lineHeight: 1.6, opacity: 0.8 },
   main: { flex: 1, flexDirection: 'column', gap: 10 },
   itemsTile: {
     flex: 1,
@@ -274,6 +275,13 @@ export function InvoiceBentoII({
                 )}
                 {data.notes !== '' && (
                   <Text style={styles.notes}>{data.notes}</Text>
+                )}
+                {(data.exportDeclaration || data.reverseChargeNote || data.exchangeRateNote) && (
+                  <Text style={styles.declarations}>
+                    {[data.exportDeclaration, data.reverseChargeNote, data.exchangeRateNote]
+                      .filter(Boolean)
+                      .join('  ')}
+                  </Text>
                 )}
               </View>
             )}

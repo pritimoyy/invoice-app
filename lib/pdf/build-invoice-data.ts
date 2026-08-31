@@ -1,5 +1,10 @@
 import { formatPaise, numberToIndianWords } from '@/lib/money'
 import type { GstTreatment } from '@/lib/tax'
+import {
+  exchangeRateNoteFor,
+  exportDeclarationFor,
+  reverseChargeNoteFor,
+} from '@/lib/declarations'
 import { buildUpiLink } from '@/lib/upi'
 
 import type { InvoiceLineRow, InvoiceTemplateData } from './types'
@@ -34,6 +39,10 @@ export type BuildInvoiceDataInput = {
   gstTreatment: GstTreatment
   currency: string
   notes: string
+  /** Whether an LUT is on file — gates the export declaration. */
+  hasLut: boolean
+  reverseCharge: boolean
+  exchangeRate: number | null
   supplier: {
     name: string
     addressLines: string[]
@@ -100,6 +109,9 @@ export function buildInvoiceData(input: BuildInvoiceDataInput): {
     dueDate: formatDate(input.dueDate),
     placeOfSupply: input.placeOfSupply,
     gstTreatment: input.gstTreatment,
+    exportDeclaration: exportDeclarationFor(input.gstTreatment, input.hasLut),
+    reverseChargeNote: reverseChargeNoteFor(input.reverseCharge),
+    exchangeRateNote: exchangeRateNoteFor(input.currency, input.exchangeRate),
     notes: input.notes.trim(),
     supplier: input.supplier,
     billTo: {

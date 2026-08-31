@@ -39,6 +39,19 @@ export type InvoiceTemplateData = {
   // lib/tax.ts. Templates do no tax computation of their own; this is
   // purely "which already-computed line, if any, to show."
   gstTreatment: GstTreatment
+  /**
+   * Statutory endorsements the document must carry, already resolved to
+   * their printed wording. Empty string means "print nothing" — templates
+   * never decide when a declaration applies, only where it sits.
+   *
+   * `exportDeclaration` is the LUT line CLAUDE.md requires on a zero-rated
+   * export; `reverseChargeNote` the endorsement for a reverse-charge
+   * supply; `exchangeRateNote` the rate a foreign-currency invoice was
+   * raised at, which a rupee-keeping accountant needs to reconcile it.
+   */
+  exportDeclaration: string
+  reverseChargeNote: string
+  exchangeRateNote: string
   supplier: {
     name: string
     addressLines: string[]

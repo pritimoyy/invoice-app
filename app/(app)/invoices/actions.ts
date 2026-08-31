@@ -36,6 +36,11 @@ export type SaveDraftInput = {
   discountPaise: number
   notes: string
   terms: string
+  reverseCharge: boolean
+  /** Rate to INR for a foreign-currency invoice; null for INR. */
+  exchangeRate: number | null
+  /** Private — never reaches the PDF or the public view. */
+  internalMemo: string
   items: DraftLineItemInput[]
 }
 
@@ -136,6 +141,7 @@ export async function createDraftInvoice(formData: FormData) {
     gst_treatment: gstTreatment,
     place_of_supply: client.state,
     currency: client.currency,
+    template: profile?.default_template ?? 'inverted',
     notes: profile?.notes_default ?? null,
   })
 
@@ -250,6 +256,9 @@ export async function saveDraftInvoice(
       total_paise: totalPaise,
       notes: input.notes || null,
       terms: input.terms || null,
+      reverse_charge: input.reverseCharge,
+      exchange_rate: input.exchangeRate,
+      internal_memo: input.internalMemo || null,
     })
     .eq('id', invoiceId)
     .eq('status', 'draft')

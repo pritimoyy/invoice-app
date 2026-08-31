@@ -5,6 +5,7 @@ import { useActionState } from 'react'
 import { Button } from '@/components/ui/button'
 import { FormField, FormSection, FormSelect, FormTextarea } from '@/components/invoice/form-field'
 import { GST_STATES } from '@/lib/gst-states'
+import { TEMPLATE_OPTIONS } from '@/lib/pdf/pick-template'
 import type { Database } from '@/types/database'
 
 import { saveProfile, type SettingsState } from './actions'
@@ -195,6 +196,14 @@ export function SettingsForm({
           type="number"
           defaultValue={String(profile?.default_terms_days ?? 15)}
           disabled={pending}
+        />
+        <FormSelect
+          name="default_template"
+          label="Default template"
+          defaultValue={profile?.default_template ?? 'inverted'}
+          options={TEMPLATE_OPTIONS.map((t) => ({ value: t.value, label: t.label }))}
+          disabled={pending}
+          hint="What a new invoice starts as. You can still switch template per invoice."
         />
         <FormTextarea
           name="notes_default"
