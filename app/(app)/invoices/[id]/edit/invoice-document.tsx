@@ -1,6 +1,5 @@
 import { useRef } from 'react'
 
-import { Button } from '@/components/ui/button'
 import { formatPaise } from '@/lib/money'
 import type { InvoiceTemplateData } from '@/lib/pdf/types'
 import { archivo } from '@/lib/web-fonts'
@@ -59,6 +58,11 @@ export type InvoiceDocumentProps = {
   terms: string
   onTermsChange: (v: string) => void
 }
+
+// A sentinel, not a real service id — uuids never collide with it, so the
+// combined add-item select can tell "start blank" apart from "from the
+// rate card" using one <select>'s value alone.
+const CUSTOM_ITEM_VALUE = '__custom__'
 
 const microLabel = 'text-[10px] uppercase tracking-[0.14em] text-neutral-400'
 const fieldClass =
@@ -235,7 +239,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
                   onChange={(e) => onItemChange(item.key, { description: e.target.value })}
                   placeholder={'Long Form Edit\nVideo title one\nVideo title two'}
                   rows={Math.max(1, descLineCount)}
-                  className={`${fieldClass} resize-none pb-1 leading-relaxed`}
+                  className={`${fieldClass} w-full resize-none pb-1 leading-relaxed`}
                 />
                 <button
                   type="button"
@@ -314,28 +318,30 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
       </div>
 
       <div className="flex flex-wrap items-center gap-6">
-        <Button
-          type="button"
-          variant="ghost"
-          onClick={onAddItem}
-          className="h-auto px-0 text-[11px] uppercase tracking-[0.1em] text-neutral-500 hover:bg-transparent hover:text-neutral-900 hover:underline"
+        <select
+          value=""
+          onChange={(e) => {
+            if (!e.target.value) return
+            if (e.target.value === CUSTOM_ITEM_VALUE) {
+              onAddItem()
+            } else {
+              onAddFromService(e.target.value)
+            }
+          }}
+          className={`${fieldClass} w-auto max-w-[260px] pb-1 text-[11px] uppercase tracking-[0.1em] text-neutral-500`}
         >
-          + Add line item
-        </Button>
-        {services.length > 0 && (
-          <select
-            value=""
-            onChange={(e) => e.target.value && onAddFromService(e.target.value)}
-            className={`${fieldClass} w-auto max-w-[220px] pb-1 text-[11px] uppercase tracking-[0.1em] text-neutral-500`}
-          >
-            <option value="">+ Add from rate card…</option>
-            {services.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.name}
-              </option>
-            ))}
-          </select>
-        )}
+          <option value="">+ Add line item…</option>
+          <option value={CUSTOM_ITEM_VALUE}>+ New custom item</option>
+          {services.length > 0 ? (
+            <optgroup label="From rate card">
+              {services.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name}
+                </option>
+              ))}
+            </optgroup>
+          ) : null}
+        </select>
       </div>
 
       <div className="flex flex-col gap-5 border-t border-neutral-200 pt-6 sm:flex-row sm:items-end">
