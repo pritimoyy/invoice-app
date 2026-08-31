@@ -36,12 +36,12 @@ export default async function EditServicePage({
   return (
     <div className="mx-auto w-full max-w-2xl">
       <div className="mb-12 flex items-baseline justify-between gap-4">
-        <h1 className="flex items-baseline gap-3 text-[22px] font-medium tracking-tight text-neutral-900">
+        <h1 className="flex items-baseline gap-3 text-[28px] font-semibold tracking-[-0.02em] text-foreground">
           {service.name}
           {service.is_archived ? (
             <Badge
               variant="outline"
-              className="h-auto rounded-none px-1.5 py-0.5 text-[10px] uppercase tracking-[0.1em] text-neutral-500"
+              className="h-auto px-2 py-0.5 text-[11px] font-medium text-muted-foreground"
             >
               Archived
             </Badge>
@@ -59,7 +59,7 @@ export default async function EditServicePage({
             type="submit"
             variant="ghost"
             size="sm"
-            className="h-auto px-0 text-[11px] uppercase tracking-[0.12em] text-neutral-500 hover:bg-transparent hover:text-neutral-900 hover:underline"
+            className="h-auto px-0 text-[13px] font-medium text-muted-foreground hover:bg-transparent hover:text-foreground"
           >
             {service.is_archived ? 'Unarchive' : 'Archive'}
           </Button>

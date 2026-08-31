@@ -2,17 +2,20 @@
 
 import { useActionState } from 'react'
 
+import { Button } from '@/components/ui/button'
+
 import { login, type LoginState } from './actions'
 
 const initialState: LoginState = { error: null }
 
 const fieldClass =
-  'w-full border-b border-neutral-300 bg-transparent pb-2 text-[15px] ' +
-  'text-neutral-900 outline-none transition-colors placeholder:text-neutral-400 ' +
-  'focus:border-neutral-900 disabled:opacity-50'
+  'h-11 w-full rounded-xl border border-transparent bg-secondary px-3.5 text-[15px] ' +
+  'text-foreground outline-none transition-colors placeholder:text-muted-foreground ' +
+  'focus-visible:border-ring focus-visible:bg-surface focus-visible:ring-[3px] ' +
+  'focus-visible:ring-ring/40 disabled:opacity-50'
 
 const labelClass =
-  'block text-[11px] uppercase tracking-[0.12em] text-neutral-500'
+  'block text-[13px] font-medium text-muted-foreground'
 
 export function LoginForm() {
   const [state, formAction, pending] = useActionState(login, initialState)
@@ -51,18 +54,14 @@ export function LoginForm() {
       </div>
 
       {state.error ? (
-        <p role="alert" className="text-[13px] text-red-700">
+        <p role="alert" className="text-[13px] text-destructive">
           {state.error}
         </p>
       ) : null}
 
-      <button
-        type="submit"
-        disabled={pending}
-        className="mt-1 w-full bg-neutral-900 px-4 py-3 text-[13px] uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-90 disabled:opacity-50"
-      >
+      <Button type="submit" disabled={pending} size="lg" className="mt-1 w-full">
         {pending ? 'Signing in…' : 'Sign in'}
-      </button>
+      </Button>
     </form>
   )
 }

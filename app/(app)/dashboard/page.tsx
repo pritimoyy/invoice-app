@@ -32,29 +32,54 @@ function StatCard({
   label,
   amounts,
   emptyText,
-  valueClassName = 'text-neutral-900',
+  /** Gradient tiles carry the two figures that matter most; the rest stay
+      plain cards so the colour actually means something. */
+  gradient,
+  valueClassName = 'text-foreground',
 }: {
   label: string
   amounts: Map<string, number>
   emptyText: string
+  gradient?: 'blue' | 'violet' | 'mint' | 'sunset'
   valueClassName?: string
 }) {
+  const isGradient = Boolean(gradient)
   return (
-    <div className="border border-neutral-200 p-6">
-      <p className="text-[10px] uppercase tracking-[0.14em] text-neutral-400">{label}</p>
+    <div
+      className={
+        isGradient
+          ? `app-card-gradient grad-${gradient} p-5`
+          : 'app-card p-5'
+      }
+    >
+      <p
+        className={`text-[13px] font-medium ${
+          isGradient ? 'text-white/80' : 'text-muted-foreground'
+        }`}
+      >
+        {label}
+      </p>
       {amounts.size > 0 ? (
-        <div className="mt-2 flex flex-col gap-1">
+        <div className="mt-2 flex flex-col gap-0.5">
           {[...amounts.entries()].map(([currency, paise]) => (
             <p
               key={currency}
-              className={`text-[26px] font-semibold tabular-nums ${valueClassName}`}
+              className={`text-[26px] font-semibold tracking-[-0.02em] tabular-nums ${
+                isGradient ? 'text-white' : valueClassName
+              }`}
             >
               {formatPaise(paise, { currency, showPaise: false })}
             </p>
           ))}
         </div>
       ) : (
-        <p className="mt-2 text-[14px] text-neutral-500">{emptyText}</p>
+        <p
+          className={`mt-2 text-[15px] ${
+            isGradient ? 'text-white/75' : 'text-muted-foreground'
+          }`}
+        >
+          {emptyText}
+        </p>
       )}
     </div>
   )
@@ -143,21 +168,20 @@ export default async function DashboardPage() {
   return (
     <div className="mx-auto w-full max-w-4xl">
       <div className="flex items-baseline justify-between gap-4">
-        <h1 className="text-[22px] font-medium tracking-tight text-neutral-900">Dashboard</h1>
+        <h1 className="text-[28px] font-semibold tracking-[-0.02em] text-foreground">Dashboard</h1>
         <Button
           asChild
-          className="h-auto rounded-none bg-neutral-900 px-4 py-2 text-[12px] uppercase tracking-[0.1em] text-white hover:bg-neutral-900/90"
-        >
+          >
           <Link href="/invoices/new">New invoice</Link>
         </Button>
       </div>
 
       {recurringDueCount ? (
-        <p className="mt-3 text-[13px] text-neutral-500">
+        <p className="mt-3 text-[13px] text-muted-foreground">
           {recurringDueCount} recurring invoice{recurringDueCount === 1 ? '' : 's'} due —{' '}
           <Link
             href="/recurring"
-            className="underline-offset-4 hover:text-neutral-900 hover:underline"
+            className="underline-offset-4 hover:text-foreground hover:underline"
           >
             generate {recurringDueCount === 1 ? 'it' : 'them'}
           </Link>
@@ -166,51 +190,57 @@ export default async function DashboardPage() {
       ) : null}
 
       {draftCount ? (
-        <p className="mt-3 text-[13px] text-neutral-500">
+        <p className="mt-3 text-[13px] text-muted-foreground">
           {draftCount} draft{draftCount === 1 ? '' : 's'} waiting to be sent —{' '}
-          <Link href="/invoices" className="underline-offset-4 hover:text-neutral-900 hover:underline">
+          <Link href="/invoices" className="underline-offset-4 hover:text-foreground hover:underline">
             review them
           </Link>
           .
         </p>
       ) : null}
 
-      <div className="mt-10 grid grid-cols-1 gap-6 border-t border-neutral-200 pt-10 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Outstanding" amounts={outstandingByCurrency} emptyText="Nothing outstanding." />
+      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <StatCard
+          label="Outstanding"
+          amounts={outstandingByCurrency}
+          emptyText="Nothing outstanding."
+          gradient="blue"
+        />
         <StatCard
           label="Overdue"
           amounts={overdueByCurrency}
           emptyText="Nothing overdue."
-          valueClassName="text-red-700"
+          valueClassName="text-destructive"
         />
         <StatCard
           label={`Due in ${DUE_SOON_DAYS} days`}
           amounts={dueSoonByCurrency}
           emptyText="Nothing due soon."
+          gradient="violet"
         />
         <StatCard
           label="Paid this month"
           amounts={paidThisMonthByCurrency}
           emptyText="Nothing yet."
-          valueClassName="text-emerald-700"
+          valueClassName="text-success"
         />
       </div>
 
-      <div className="mt-10 border-t border-neutral-200 pt-10">
+      <div className="mt-10">
         <div className="flex items-baseline justify-between">
-          <h2 className="text-[15px] font-medium tracking-tight text-neutral-900">
+          <h2 className="text-[15px] font-medium tracking-tight text-foreground">
             Recent invoices
           </h2>
           <Link
             href="/invoices"
-            className="text-[11px] uppercase tracking-[0.12em] text-neutral-500 hover:text-neutral-900 hover:underline"
+            className="text-[13px] font-medium text-muted-foreground hover:text-foreground hover:underline"
           >
             All invoices
           </Link>
         </div>
 
         {recent && recent.length > 0 ? (
-          <div className="mt-4 flex flex-col">
+          <div className="app-card mt-4 overflow-hidden px-4">
             {recent.map((inv) => {
               const displayStatus = computeDisplayStatus({
                 status: inv.status,
@@ -225,10 +255,10 @@ export default async function DashboardPage() {
                 <Link
                   key={inv.id}
                   href={`/invoices/${inv.id}/edit`}
-                  className="flex items-center gap-4 border-b border-neutral-100 py-3 text-[13px] hover:bg-neutral-50"
+                  className="flex items-center gap-4 border-b border-hairline py-3 text-[13px] hover:bg-secondary"
                 >
-                  <span className="flex-1 text-neutral-900">{inv.bill_to_name}</span>
-                  <span className="text-neutral-500">
+                  <span className="flex-1 text-foreground">{inv.bill_to_name}</span>
+                  <span className="text-muted-foreground">
                     {new Date(inv.issue_date).toLocaleDateString('en-IN', {
                       day: '2-digit',
                       month: 'short',
@@ -237,11 +267,11 @@ export default async function DashboardPage() {
                   </span>
                   <Badge
                     variant="outline"
-                    className={`h-auto rounded-none px-1.5 py-0.5 text-[10px] uppercase tracking-[0.1em] ${displayStatusClassName(displayStatus)}`}
+                    className={`h-auto px-2 py-0.5 text-[11px] font-medium ${displayStatusClassName(displayStatus)}`}
                   >
                     {DISPLAY_STATUS_LABEL[displayStatus]}
                   </Badge>
-                  <span className="w-28 text-right tabular-nums text-neutral-900">
+                  <span className="w-28 text-right tabular-nums text-foreground">
                     {formatPaise(inv.total_paise, { currency: inv.currency, showPaise: false })}
                   </span>
                 </Link>
@@ -249,7 +279,7 @@ export default async function DashboardPage() {
             })}
           </div>
         ) : (
-          <p className="mt-4 text-[13px] text-neutral-500">No invoices yet.</p>
+          <p className="mt-4 text-[13px] text-muted-foreground">No invoices yet.</p>
         )}
       </div>
     </div>

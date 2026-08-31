@@ -34,10 +34,11 @@ const METHOD_OPTIONS: { value: PaymentMethod; label: string }[] = [
   { value: 'other', label: 'Other' },
 ]
 
-const fieldLabel = 'text-[10px] uppercase tracking-[0.1em] text-neutral-400'
+const fieldLabel = 'text-[13px] font-medium text-muted-foreground'
 const fieldInput =
-  'rounded-none border-0 border-b border-neutral-300 bg-transparent py-1.5 text-[13px] ' +
-  'text-neutral-900 outline-none transition-colors focus-visible:border-neutral-900'
+  'h-10 rounded-xl border border-transparent bg-secondary px-3 text-[14px] ' +
+  'text-foreground outline-none transition-colors focus-visible:border-ring ' +
+  'focus-visible:ring-[3px] focus-visible:ring-ring/40'
 
 export function PaymentsSection({
   invoiceId,
@@ -119,23 +120,23 @@ export function PaymentsSection({
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 border-t border-neutral-200 pt-8">
+    <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 pt-2">
       <div className="flex flex-wrap items-baseline justify-between gap-4">
-        <h2 className="text-[15px] font-medium tracking-tight text-neutral-900">Payments</h2>
+        <h2 className="text-[17px] font-semibold text-foreground">Payments</h2>
         <div className="flex items-baseline gap-6 text-[13px]">
-          <span className="text-neutral-500">
-            Paid <span className="font-semibold tabular-nums text-neutral-900">{formatPaise(paidPaise, { currency })}</span>
+          <span className="text-muted-foreground">
+            Paid <span className="font-semibold tabular-nums text-foreground">{formatPaise(paidPaise, { currency })}</span>
           </span>
-          <span className="text-neutral-500">
+          <span className="text-muted-foreground">
             Balance{' '}
             <span
-              className={`font-semibold tabular-nums ${balancePaise > 0 ? 'text-neutral-900' : 'text-emerald-700'}`}
+              className={`font-semibold tabular-nums ${balancePaise > 0 ? 'text-foreground' : 'text-success'}`}
             >
               {formatPaise(balancePaise, { currency })}
             </span>
           </span>
           {isOverdue ? (
-            <span className="text-[11px] uppercase tracking-[0.1em] text-red-700">Overdue</span>
+            <span className="rounded-full bg-destructive/10 px-2 py-0.5 text-[12px] font-medium text-destructive">Overdue</span>
           ) : null}
         </div>
       </div>
@@ -145,20 +146,20 @@ export function PaymentsSection({
           {payments.map((p) => (
             <div
               key={p.id}
-              className={`flex items-center gap-4 border-b border-neutral-100 py-2.5 text-[13px] ${
-                editingId === p.id ? 'bg-neutral-50' : ''
+              className={`flex items-center gap-4 border-b border-hairline py-2.5 text-[13px] ${
+                editingId === p.id ? 'bg-secondary' : ''
               }`}
             >
-              <span className="w-24 text-neutral-500">{p.paid_on}</span>
-              <span className="w-28 font-medium tabular-nums text-neutral-900">
+              <span className="w-24 text-muted-foreground">{p.paid_on}</span>
+              <span className="w-28 font-medium tabular-nums text-foreground">
                 {formatPaise(p.amount_paise, { currency })}
               </span>
-              <span className="w-32 text-neutral-500">
+              <span className="w-32 text-muted-foreground">
                 {METHOD_OPTIONS.find((m) => m.value === p.method)?.label ?? p.method}
               </span>
-              <span className="flex-1 text-neutral-500">{p.reference || '—'}</span>
+              <span className="flex-1 text-muted-foreground">{p.reference || '—'}</span>
               {p.tds_paise > 0 ? (
-                <span className="text-[12px] text-neutral-400">
+                <span className="text-[12px] text-muted-foreground">
                   TDS {formatPaise(p.tds_paise, { currency })}
                 </span>
               ) : null}
@@ -166,7 +167,7 @@ export function PaymentsSection({
                 type="button"
                 onClick={() => startEditing(p)}
                 disabled={pending}
-                className="text-[11px] uppercase tracking-[0.1em] text-neutral-400 hover:text-neutral-900 hover:underline disabled:opacity-30"
+                className="text-[13px] font-medium text-primary hover:underline disabled:opacity-30"
               >
                 Edit
               </button>
@@ -174,7 +175,7 @@ export function PaymentsSection({
                 type="button"
                 onClick={() => handleDelete(p.id)}
                 disabled={pending}
-                className="text-neutral-400 hover:text-red-700 disabled:opacity-30"
+                className="text-muted-foreground hover:text-destructive disabled:opacity-30"
               >
                 ✕
               </button>
@@ -182,10 +183,10 @@ export function PaymentsSection({
           ))}
         </div>
       ) : (
-        <p className="text-[13px] text-neutral-500">No payments recorded yet.</p>
+        <p className="text-[13px] text-muted-foreground">No payments recorded yet.</p>
       )}
 
-      <div className="flex flex-wrap items-end gap-4 border-t border-neutral-200 pt-5">
+      <div className="flex flex-wrap items-end gap-4 border-t border-hairline pt-5">
         <div className="flex flex-col gap-1">
           <label className={fieldLabel}>Amount</label>
           <input
@@ -249,7 +250,7 @@ export function PaymentsSection({
           type="button"
           disabled={pending}
           onClick={handleSubmit}
-          className="h-auto rounded-none bg-neutral-900 px-5 py-2.5 text-[12px] uppercase tracking-[0.1em] text-white hover:bg-neutral-900/90 disabled:opacity-50"
+          
         >
           {pending ? 'Saving…' : editingId ? 'Save payment' : 'Add payment'}
         </Button>
@@ -258,14 +259,14 @@ export function PaymentsSection({
             type="button"
             onClick={resetForm}
             disabled={pending}
-            className="text-[11px] uppercase tracking-[0.1em] text-neutral-400 hover:text-neutral-900 hover:underline disabled:opacity-30"
+            className="text-[13px] font-medium text-primary hover:underline disabled:opacity-30"
           >
             Cancel edit
           </button>
         ) : null}
       </div>
       {error ? (
-        <p role="alert" className="text-[13px] text-red-700">
+        <p role="alert" className="text-[13px] text-destructive">
           {error}
         </p>
       ) : null}

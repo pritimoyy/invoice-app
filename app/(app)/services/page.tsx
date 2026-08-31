@@ -38,61 +38,61 @@ export default async function ServicesPage({
   return (
     <div className="mx-auto w-full max-w-4xl">
       <div className="flex items-baseline justify-between gap-4">
-        <h1 className="text-[22px] font-medium tracking-tight text-neutral-900">
+        <h1 className="text-[28px] font-semibold tracking-[-0.02em] text-foreground">
           Services
         </h1>
         <Button
           asChild
-          className="h-auto rounded-none bg-neutral-900 px-4 py-2 text-[12px] uppercase tracking-[0.1em] text-white hover:bg-neutral-900/90"
-        >
+          >
           <Link href="/services/new">Add service</Link>
         </Button>
       </div>
 
       {services && services.length > 0 ? (
-        <Table className="mt-8">
+        <div className="app-card mt-6 overflow-hidden">
+          <Table>
           <TableHeader>
-            <TableRow className="border-neutral-200 hover:bg-transparent">
-              <TableHead className="h-9 px-0 text-[11px] font-normal uppercase tracking-[0.1em] text-neutral-500">
+            <TableRow className="border-hairline hover:bg-transparent">
+              <TableHead className="h-11 px-4 text-[12px] font-medium text-muted-foreground">
                 Name
               </TableHead>
-              <TableHead className="h-9 px-0 text-[11px] font-normal uppercase tracking-[0.1em] text-neutral-500">
+              <TableHead className="h-11 px-4 text-[12px] font-medium text-muted-foreground">
                 Unit
               </TableHead>
-              <TableHead className="h-9 px-0 text-right text-[11px] font-normal uppercase tracking-[0.1em] text-neutral-500">
+              <TableHead className="h-11 px-4 text-right text-[12px] font-medium text-muted-foreground">
                 Rate
               </TableHead>
-              <TableHead className="h-9 px-0 text-right text-[11px] font-normal uppercase tracking-[0.1em] text-neutral-500">
+              <TableHead className="h-11 px-4 text-right text-[12px] font-medium text-muted-foreground">
                 Tax
               </TableHead>
-              <TableHead className="h-9 px-0" />
+              <TableHead className="h-11 px-4" />
             </TableRow>
           </TableHeader>
           <TableBody>
             {services.map((s) => (
-              <TableRow key={s.id} className="border-neutral-200 hover:bg-neutral-50">
-                <TableCell className="px-0 py-4">
+              <TableRow key={s.id} className="border-hairline hover:bg-secondary/50">
+                <TableCell className="px-4 py-3.5">
                   <Link
                     href={`/services/${s.id}`}
-                    className="text-[14px] text-neutral-900 hover:underline"
+                    className="text-[14px] text-foreground hover:underline"
                   >
                     {s.name}
                   </Link>
                 </TableCell>
-                <TableCell className="px-0 py-4 text-[13px] text-neutral-500">
+                <TableCell className="px-4 py-3.5 text-[13px] text-muted-foreground">
                   {s.unit}
                 </TableCell>
-                <TableCell className="px-0 py-4 text-right text-[13px] tabular-nums text-neutral-900">
+                <TableCell className="px-4 py-3.5 text-right text-[13px] tabular-nums text-foreground">
                   {formatPaise(s.default_rate_paise, { showPaise: false })}
                 </TableCell>
-                <TableCell className="px-0 py-4 text-right text-[13px] tabular-nums text-neutral-500">
+                <TableCell className="px-4 py-3.5 text-right text-[13px] tabular-nums text-muted-foreground">
                   {TAX_RATE_OPTIONS.find((o) => o.bps === s.tax_rate_bps)?.label ?? '—'}
                 </TableCell>
-                <TableCell className="px-0 py-4 text-right">
+                <TableCell className="px-4 py-3.5 text-right">
                   <div className="flex items-center justify-end gap-4">
                     <Link
                       href={`/services/${s.id}`}
-                      className="text-[11px] uppercase tracking-[0.1em] text-neutral-400 hover:text-neutral-900 hover:underline"
+                      className="text-[13px] font-medium text-primary hover:underline"
                     >
                       Edit
                     </Link>
@@ -103,7 +103,7 @@ export default async function ServicesPage({
                         type="submit"
                         variant="ghost"
                         size="sm"
-                        className="h-auto px-0 text-[11px] uppercase tracking-[0.1em] text-neutral-400 hover:bg-transparent hover:text-neutral-900 hover:underline"
+                        className="h-auto px-0 text-[13px] font-medium text-muted-foreground hover:bg-transparent hover:text-foreground"
                       >
                         {showArchived ? 'Unarchive' : 'Archive'}
                       </Button>
@@ -114,13 +114,14 @@ export default async function ServicesPage({
             ))}
           </TableBody>
         </Table>
+        </div>
       ) : (
-        <p className="mt-10 text-[13px] text-neutral-500">
+        <p className="mt-10 text-[13px] text-muted-foreground">
           {showArchived ? 'No archived services.' : 'No services yet.'}
         </p>
       )}
 
-      <p className="mt-8 text-[12px] text-neutral-400">
+      <p className="mt-8 text-[12px] text-muted-foreground">
         {showArchived ? (
           <Link href="/services" className="underline-offset-4 hover:underline">
             Back to active services

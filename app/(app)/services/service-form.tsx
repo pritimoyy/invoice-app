@@ -66,17 +66,17 @@ export function ServiceForm({ service }: { service?: Service }) {
         />
       </FormSection>
 
-      <div className="flex items-center gap-4 border-t border-neutral-200 pt-8">
+      <div className="flex items-center gap-4 pt-2">
         <Button
           type="submit"
           disabled={pending}
-          className="h-auto rounded-none bg-neutral-900 px-6 py-3 text-[13px] uppercase tracking-[0.12em] text-white hover:bg-neutral-900/90 disabled:opacity-50"
+          size="lg"
         >
           {pending ? 'Saving…' : service ? 'Save' : 'Add service'}
         </Button>
 
         {state.error ? (
-          <p role="alert" className="text-[13px] text-red-700">
+          <p role="alert" className="text-[13px] text-destructive">
             {state.error}
           </p>
         ) : null}

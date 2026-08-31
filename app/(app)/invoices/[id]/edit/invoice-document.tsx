@@ -72,11 +72,16 @@ export type InvoiceDocumentProps = {
 // rate card" using one <select>'s value alone.
 const CUSTOM_ITEM_VALUE = '__custom__'
 
-const microLabel = 'text-[10px] uppercase tracking-[0.14em] text-neutral-400'
+const microLabel = 'text-[13px] font-medium text-muted-foreground'
 const fieldClass =
-  'rounded-none border-0 border-b border-neutral-200 bg-transparent p-0 text-inherit outline-none ' +
-  'transition-colors placeholder:text-neutral-400 focus-visible:border-neutral-900 ' +
-  'disabled:cursor-not-allowed disabled:opacity-50'
+  'rounded-lg border border-transparent bg-transparent px-2 py-1 text-inherit outline-none ' +
+  // Left-only inset: the negative margin exists so a field's text lines up
+  // with the column heading above it. Applied on both sides it pushed the
+  // right-aligned numeric fields past their column edge.
+  '-ms-2 transition-colors placeholder:text-muted-foreground hover:bg-secondary/60 ' +
+  'focus-visible:border-ring focus-visible:bg-surface focus-visible:ring-[3px] ' +
+  'focus-visible:ring-ring/30 disabled:cursor-not-allowed disabled:opacity-50 ' +
+  'disabled:hover:bg-transparent'
 // Native number-input spin buttons increment by `step` — visually tiny and
 // easy to misclick (this is what put "1.002" in a quantity field: one
 // stray click at step=0.001). Quantity still accepts a typed decimal like
@@ -137,12 +142,12 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
   }
 
   return (
-    <div className={`${archivo.className} flex flex-col gap-10 bg-white p-8 text-neutral-900 sm:p-14`}>
-      <div className="flex items-end justify-between gap-4 border-b-2 border-neutral-900 pb-5">
-        <h1 className="text-[40px] font-extrabold leading-[0.95] tracking-[-0.03em]">
+    <div className={`${archivo.className} flex flex-col gap-10 bg-surface p-6 text-foreground sm:p-10`}>
+      <div className="flex items-end justify-between gap-4 border-b border-hairline pb-5">
+        <h1 className="text-[34px] font-bold leading-[1.05] tracking-[-0.03em]">
           Invoice
         </h1>
-        <p className="text-right text-[13px] font-semibold tabular-nums text-neutral-500">
+        <p className="text-right text-[13px] font-semibold tabular-nums text-muted-foreground">
           {data.invoiceNumber}
         </p>
       </div>
@@ -161,7 +166,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
               </option>
             ))}
           </select>
-          <p className="text-[14px] leading-relaxed text-neutral-500">
+          <p className="text-[14px] leading-relaxed text-muted-foreground">
             {data.billTo.addressLines.join(', ') || '—'}
             {data.billTo.gstin ? (
               <>
@@ -174,7 +179,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
 
         <div className="flex flex-col gap-1.5">
           <p className={microLabel}>Dates</p>
-          <p className="text-[14px] leading-relaxed text-neutral-700">
+          <p className="text-[14px] leading-relaxed text-foreground">
             Issued{' '}
             <input
               type="date"
@@ -192,7 +197,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
             />
           </p>
           {data.placeOfSupply ? (
-            <p className="text-[13px] text-neutral-500">
+            <p className="text-[13px] text-muted-foreground">
               Place of supply {data.placeOfSupply}
             </p>
           ) : null}
@@ -201,7 +206,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
         <div className="flex flex-col gap-1.5">
           <p className={microLabel}>From</p>
           <p className="text-[16px] font-bold tracking-tight">{data.supplier.name || '—'}</p>
-          <p className="text-[14px] leading-relaxed text-neutral-500">
+          <p className="text-[14px] leading-relaxed text-muted-foreground">
             {data.supplier.addressLines.join(', ') || '—'}
             {data.supplier.gstin ? (
               <>
@@ -219,12 +224,12 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 border-t border-neutral-200 pt-6">
-        <div className={`flex gap-3 border-b-2 border-neutral-900 pb-3 ${microLabel}`}>
+      <div className="flex flex-col gap-3 border-t border-border pt-6">
+        <div className={`flex gap-3 border-b border-hairline pb-3 ${microLabel}`}>
           <div className="w-6">#</div>
           <div className="flex-1">
             Description
-            <span className="ml-2 font-normal normal-case tracking-normal text-neutral-400">
+            <span className="ml-2 font-normal normal-case tracking-normal text-muted-foreground">
               — Enter for each video title
             </span>
           </div>
@@ -240,9 +245,9 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
           return (
             <div
               key={item.key}
-              className="flex items-start gap-3 border-b border-neutral-100 pb-4 text-[14px]"
+              className="flex items-start gap-3 app-row pb-4 pt-1 text-[15px]"
             >
-              <div className="w-6 pt-1 tabular-nums text-neutral-400">
+              <div className="w-6 pt-1 tabular-nums text-muted-foreground">
                 {String(i + 1).padStart(2, '0')}
               </div>
               <div className="flex flex-1 flex-col gap-1">
@@ -259,7 +264,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
                 <button
                   type="button"
                   onClick={() => addDescLine(item.key, item.description)}
-                  className="self-start text-[10px] uppercase tracking-[0.08em] text-neutral-400 hover:text-neutral-900 hover:underline disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:no-underline disabled:hover:text-neutral-400"
+                  className="self-start text-[10px] uppercase tracking-[0.08em] text-muted-foreground hover:text-foreground hover:underline disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:no-underline disabled:hover:text-muted-foreground"
                 >
                   + Video title
                 </button>
@@ -285,12 +290,12 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
               <div className="w-32 pt-0.5 text-right font-semibold tabular-nums">
                 {formatPaise(lineSubtotals[i] ?? 0, { showPaise: false, currency })}
                 {taxPaise > 0 ? (
-                  <div className="text-[10px] font-normal text-neutral-400">
+                  <div className="text-[10px] font-normal text-muted-foreground">
                     +{formatPaise(taxPaise, { showPaise: false, currency })} tax
                   </div>
                 ) : null}
               </div>
-              <div className="flex w-24 items-center justify-end gap-1.5 pt-0.5 text-neutral-400">
+              <div className="flex w-24 items-center justify-end gap-1.5 pt-0.5 text-muted-foreground">
                 <select
                   value={item.taxRateBps}
                   onChange={(e) => onItemChange(item.key, { taxRateBps: Number(e.target.value) })}
@@ -306,7 +311,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
                   type="button"
                   onClick={() => onItemMove(item.key, -1)}
                   disabled={i === 0}
-                  className="hover:text-neutral-900 disabled:opacity-30"
+                  className="hover:text-foreground disabled:opacity-30"
                 >
                   ↑
                 </button>
@@ -314,7 +319,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
                   type="button"
                   onClick={() => onItemMove(item.key, 1)}
                   disabled={i === items.length - 1}
-                  className="hover:text-neutral-900 disabled:opacity-30"
+                  className="hover:text-foreground disabled:opacity-30"
                 >
                   ↓
                 </button>
@@ -322,7 +327,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
                   type="button"
                   onClick={() => onItemRemove(item.key)}
                   disabled={items.length === 1}
-                  className="hover:text-red-700 disabled:opacity-30"
+                  className="hover:text-destructive disabled:opacity-30"
                 >
                   ✕
                 </button>
@@ -343,7 +348,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
               onAddFromService(e.target.value)
             }
           }}
-          className={`${fieldClass} w-auto max-w-[260px] pb-1 text-[11px] uppercase tracking-[0.1em] text-neutral-500`}
+          className={`${fieldClass} w-auto max-w-[260px] pb-1 text-[13px] font-medium text-muted-foreground`}
         >
           <option value="">+ Add line item…</option>
           <option value={CUSTOM_ITEM_VALUE}>+ New custom item</option>
@@ -359,18 +364,18 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
         </select>
       </div>
 
-      <div className="flex flex-col gap-5 border-t border-neutral-200 pt-6 sm:flex-row sm:items-end">
+      <div className="flex flex-col gap-5 border-t border-border pt-6 sm:flex-row sm:items-end">
         <div className="flex-1">
           <p className={microLabel}>Total in words</p>
           <p className="text-[15px] font-semibold leading-snug">{data.totals.words || '—'}</p>
         </div>
         <div className="w-full text-[14px] sm:w-80">
           <div className="flex justify-between py-1.5">
-            <span className="text-neutral-500">Subtotal — {data.totals.items}</span>
+            <span className="text-muted-foreground">Subtotal — {data.totals.items}</span>
             <span className="tabular-nums">{data.totals.subtotal}</span>
           </div>
           <div className="flex items-center justify-between gap-2 py-1.5">
-            <label className="text-neutral-500">Discount</label>
+            <label className="text-muted-foreground">Discount</label>
             <input
               value={discount}
               onChange={(e) => onDiscountChange(e.target.value)}
@@ -381,36 +386,36 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
           {gstTreatment === 'intra_state' && (
             <>
               <div className="flex justify-between py-1.5">
-                <span className="text-neutral-500">CGST</span>
+                <span className="text-muted-foreground">CGST</span>
                 <span className="tabular-nums">{data.totals.cgst}</span>
               </div>
               <div className="flex justify-between py-1.5">
-                <span className="text-neutral-500">SGST</span>
+                <span className="text-muted-foreground">SGST</span>
                 <span className="tabular-nums">{data.totals.sgst}</span>
               </div>
             </>
           )}
           {gstTreatment === 'inter_state' && (
             <div className="flex justify-between py-1.5">
-              <span className="text-neutral-500">IGST</span>
+              <span className="text-muted-foreground">IGST</span>
               <span className="tabular-nums">{data.totals.igst}</span>
             </div>
           )}
           <div className="flex justify-between py-1.5">
-            <span className="text-neutral-500">Round off</span>
+            <span className="text-muted-foreground">Round off</span>
             <span className="tabular-nums">{data.totals.roundOff}</span>
           </div>
-          <div className="mt-1.5 flex items-baseline justify-between border-t-2 border-neutral-900 pt-2.5">
+          <div className="mt-1.5 flex items-baseline justify-between border-t border-hairline pt-2.5">
             <span className="text-[15px] font-bold">Total</span>
             <span className="text-[22px] font-extrabold tabular-nums">{data.totals.total}</span>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-8 border-t border-neutral-200 pt-6 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-8 border-t border-border pt-6 sm:grid-cols-2">
         <div>
           <p className={microLabel}>Payment</p>
-          <p className="mt-1.5 text-[14px] leading-relaxed text-neutral-500">
+          <p className="mt-1.5 text-[14px] leading-relaxed text-muted-foreground">
             {data.payment.upiId || '—'}
             {data.payment.bankName ? (
               <>
@@ -436,22 +441,22 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
             value={notes}
             onChange={(e) => onNotesChange(e.target.value)}
             placeholder="—"
-            className={`${fieldClass} w-full resize-y pb-1 text-[14px] leading-relaxed text-neutral-700`}
+            className={`${fieldClass} w-full resize-y pb-1 text-[14px] leading-relaxed text-foreground`}
           />
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 border-t border-neutral-200 pt-6 sm:flex-row sm:items-start sm:gap-10">
-        <label className="flex items-start gap-2.5 text-[13px] text-neutral-700">
+      <div className="flex flex-col gap-4 border-t border-border pt-6 sm:flex-row sm:items-start sm:gap-10">
+        <label className="flex items-start gap-2.5 text-[13px] text-foreground">
           <input
             type="checkbox"
             checked={reverseCharge}
             onChange={(e) => onReverseChargeChange(e.target.checked)}
-            className="mt-0.5 accent-neutral-900 disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-0.5 accent-primary disabled:cursor-not-allowed disabled:opacity-50"
           />
           <span>
             Reverse charge
-            <span className="mt-0.5 block text-[11px] text-neutral-400">
+            <span className="mt-0.5 block text-[11px] text-muted-foreground">
               Prints &ldquo;Tax payable under reverse charge.&rdquo;
             </span>
           </span>
@@ -470,7 +475,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
               inputMode="decimal"
               className={`${fieldClass} w-36 pb-1 text-[14px] tabular-nums`}
             />
-            <p className="text-[11px] text-neutral-400">
+            <p className="text-[11px] text-muted-foreground">
               1 {currency} = this many rupees, printed for your accountant.
             </p>
           </div>
@@ -478,14 +483,14 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
       </div>
 
       {gstTreatment === 'export' && !hasLut ? (
-        <p className="border-l-2 border-red-700 pl-3 text-[13px] leading-relaxed text-red-700">
+        <p className="border-l-2 border-destructive pl-3 text-[13px] leading-relaxed text-destructive">
           This invoice is zero-rated as an export, but no LUT is recorded in
           Settings — so the Letter of Undertaking declaration can&apos;t be printed.
           Either add your LUT in Settings or choose a different tax treatment.
         </p>
       ) : null}
 
-      <div className="flex flex-col gap-1.5 border-t border-neutral-200 pt-6">
+      <div className="flex flex-col gap-1.5 border-t border-border pt-6">
         <label className={microLabel} htmlFor="doc-terms">
           Terms
         </label>
@@ -495,14 +500,14 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
           value={terms}
           onChange={(e) => onTermsChange(e.target.value)}
           placeholder={data.payment.termsLabel}
-          className={`${fieldClass} w-full resize-y pb-1 text-[14px] leading-relaxed text-neutral-700`}
+          className={`${fieldClass} w-full resize-y pb-1 text-[14px] leading-relaxed text-foreground`}
         />
-        <p className="text-[11px] text-neutral-400">
+        <p className="text-[11px] text-muted-foreground">
           Printed on the invoice if set, otherwise defaults to your standard terms.
         </p>
       </div>
 
-      <div className="flex flex-col gap-1.5 border-t border-dashed border-neutral-300 pt-6">
+      <div className="flex flex-col gap-1.5 border-t border-dashed border-border pt-6">
         <label className={microLabel} htmlFor="doc-memo">
           Internal memo — never printed
         </label>
@@ -512,7 +517,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
           value={internalMemo}
           onChange={(e) => onInternalMemoChange(e.target.value)}
           placeholder="Only you see this — chase notes, what was agreed on the call…"
-          className={`${fieldClass} w-full resize-y pb-1 text-[14px] leading-relaxed text-neutral-700`}
+          className={`${fieldClass} w-full resize-y pb-1 text-[14px] leading-relaxed text-foreground`}
         />
       </div>
     </div>

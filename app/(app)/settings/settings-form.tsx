@@ -15,7 +15,7 @@ type Profile = Database['public']['Tables']['profiles']['Row']
 const initialState: SettingsState = { error: null, saved: false }
 
 const labelClass =
-  'text-[11px] uppercase tracking-[0.12em] text-neutral-500 font-normal'
+  'text-[13px] font-medium text-muted-foreground font-normal'
 
 const STATE_OPTIONS = GST_STATES.map((s) => ({
   value: s.code,
@@ -127,23 +127,23 @@ export function SettingsForm({
         />
 
         <div className="flex flex-col gap-3 pt-1">
-          <label className="flex items-center gap-3 text-[13px] text-neutral-700">
+          <label className="flex items-center gap-3 text-[13px] text-foreground">
             <input
               type="checkbox"
               name="is_gst_registered"
               defaultChecked={profile?.is_gst_registered ?? false}
               disabled={pending}
-              className="size-4 accent-neutral-900"
+              className="size-4 accent-primary"
             />
             GST registered
           </label>
-          <label className="flex items-center gap-3 text-[13px] text-neutral-700">
+          <label className="flex items-center gap-3 text-[13px] text-foreground">
             <input
               type="checkbox"
               name="has_lut"
               defaultChecked={profile?.has_lut ?? false}
               disabled={pending}
-              className="size-4 accent-neutral-900"
+              className="size-4 accent-primary"
             />
             LUT on file (for export invoices)
           </label>
@@ -225,12 +225,12 @@ export function SettingsForm({
                 alt="Current logo"
                 className="h-12 w-auto max-w-[180px] object-contain"
               />
-              <span className="text-[12px] text-neutral-400">
+              <span className="text-[12px] text-muted-foreground">
                 Current logo
               </span>
             </div>
           ) : (
-            <p className="text-[13px] text-neutral-500">No logo uploaded.</p>
+            <p className="text-[13px] text-muted-foreground">No logo uploaded.</p>
           )}
 
           <div className="flex flex-col gap-2">
@@ -243,9 +243,9 @@ export function SettingsForm({
               type="file"
               accept="image/png,image/jpeg"
               disabled={pending}
-              className="text-[13px] text-neutral-600 file:mr-4 file:border file:border-neutral-300 file:bg-transparent file:px-3 file:py-1.5 file:text-[11px] file:uppercase file:tracking-[0.12em] file:text-neutral-700"
+              className="text-[13px] text-muted-foreground file:mr-4 file:border file:border-border file:bg-transparent file:px-3 file:py-1.5 file:text-[11px] file:uppercase file:tracking-[0.12em] file:text-foreground"
             />
-            <p className="text-[12px] text-neutral-400">
+            <p className="text-[12px] text-muted-foreground">
               PNG or JPEG, under 2 MB. Those are the formats the PDF renderer
               can embed.
             </p>
@@ -253,23 +253,23 @@ export function SettingsForm({
         </div>
       </FormSection>
 
-      <div className="flex items-center gap-4 border-t border-neutral-200 pt-8">
+      <div className="flex items-center gap-4 pt-2">
         <Button
           type="submit"
           disabled={pending}
-          className="h-auto rounded-none bg-neutral-900 px-6 py-3 text-[13px] uppercase tracking-[0.12em] text-white hover:bg-neutral-900/90 disabled:opacity-50"
+          size="lg"
         >
           {pending ? 'Saving…' : 'Save'}
         </Button>
 
         {state.error ? (
-          <p role="alert" className="text-[13px] text-red-700">
+          <p role="alert" className="text-[13px] text-destructive">
             {state.error}
           </p>
         ) : null}
 
         {state.saved && !state.error ? (
-          <p role="status" className="text-[13px] text-neutral-500">
+          <p role="status" className="text-[13px] text-muted-foreground">
             Saved.
           </p>
         ) : null}

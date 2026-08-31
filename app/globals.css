@@ -7,7 +7,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+    var(--font-geist-sans), "Segoe UI", system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -24,6 +25,13 @@
   --color-chart-2: var(--chart-2);
   --color-chart-1: var(--chart-1);
   --color-ring: var(--ring);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-hairline: var(--hairline);
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
@@ -49,75 +57,142 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  /* Sharp corners everywhere — the brief is explicit: minimal, not the
-     default shadcn look of rounded cards on grey. Every derived --radius-*
-     token cascades from this one value. */
-  --radius: 0rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* ------------------------------------------------------------------
+     Apple-inspired palette. Light is the systemGroupedBackground idea:
+     the page is a soft grey and content sits on white cards, so
+     elevation comes from the ground being darker than the card rather
+     than from heavy shadows.
+     ------------------------------------------------------------------ */
+  --background: #f2f2f7;
+  --foreground: #1d1d1f;
+
+  --surface: #ffffff;
+  --surface-2: #f5f5f7;
+
+  --card: #ffffff;
+  --card-foreground: #1d1d1f;
+  --popover: #ffffff;
+  --popover-foreground: #1d1d1f;
+
+  /* Apple's marketing blue rather than the system blue — slightly deeper,
+     and it holds up better as a large filled button. */
+  --primary: #0071e3;
+  --primary-foreground: #ffffff;
+
+  --secondary: #f5f5f7;
+  --secondary-foreground: #1d1d1f;
+  --muted: #f5f5f7;
+  --muted-foreground: #6e6e73;
+  --accent: #eef1f6;
+  --accent-foreground: #1d1d1f;
+
+  --destructive: #ff3b30;
+  --success: #34c759;
+  --success-foreground: #ffffff;
+  --warning: #ff9500;
+  --warning-foreground: #1d1d1f;
+
+  /* Hairlines, not borders: 1px at low alpha is what separates Apple's
+     lists from a boxed, bordered look. */
+  --hairline: rgba(0, 0, 0, 0.08);
+  --border: rgba(0, 0, 0, 0.08);
+  --input: rgba(0, 0, 0, 0.12);
+  --ring: rgba(0, 113, 227, 0.45);
+
+  --chart-1: #0071e3;
+  --chart-2: #5e5ce6;
+  --chart-3: #bf5af2;
+  --chart-4: #34c759;
+  --chart-5: #ff9500;
+
+  /* Continuous-ish corners. 14px reads as Apple at control size and
+     scales up to 25px for cards via the derived tokens. */
+  --radius: 0.875rem;
+
+  --elevation-1: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
+  --elevation-2: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --elevation-3: 0 12px 40px rgba(0, 0, 0, 0.12);
+
+  --gradient-blue: linear-gradient(135deg, #0a84ff 0%, #5e5ce6 100%);
+  --gradient-violet: linear-gradient(135deg, #5e5ce6 0%, #bf5af2 100%);
+  --gradient-mint: linear-gradient(135deg, #30d158 0%, #0a84ff 100%);
+  --gradient-sunset: linear-gradient(135deg, #ff9500 0%, #ff375f 100%);
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1d1d1f;
+  --sidebar-primary: #0071e3;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f5f5f7;
+  --sidebar-accent-foreground: #1d1d1f;
+  --sidebar-border: rgba(0, 0, 0, 0.08);
+  --sidebar-ring: rgba(0, 113, 227, 0.45);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* ------------------------------------------------------------------
+     Dark is the primary look in the references: a near-black ground with
+     a hint of blue, cards lifted by being *lighter* than the page, and
+     saturated accents doing the work colour usually does. Pure #000 is
+     avoided for the page so elevated surfaces still read as elevated.
+     ------------------------------------------------------------------ */
+  --background: #0b0b0f;
+  --foreground: #f5f5f7;
+
+  --surface: #151519;
+  --surface-2: #1f1f25;
+
+  --card: #151519;
+  --card-foreground: #f5f5f7;
+  --popover: #1f1f25;
+  --popover-foreground: #f5f5f7;
+
+  /* The brighter system blue — the marketing blue goes muddy on black. */
+  --primary: #0a84ff;
+  --primary-foreground: #ffffff;
+
+  --secondary: #1f1f25;
+  --secondary-foreground: #f5f5f7;
+  --muted: #1f1f25;
+  --muted-foreground: #98989f;
+  --accent: #26262e;
+  --accent-foreground: #f5f5f7;
+
+  --destructive: #ff453a;
+  --success: #30d158;
+  --success-foreground: #06210f;
+  --warning: #ff9f0a;
+  --warning-foreground: #241603;
+
+  --hairline: rgba(255, 255, 255, 0.09);
+  --border: rgba(255, 255, 255, 0.09);
+  --input: rgba(255, 255, 255, 0.14);
+  --ring: rgba(10, 132, 255, 0.55);
+
+  --chart-1: #0a84ff;
+  --chart-2: #5e5ce6;
+  --chart-3: #bf5af2;
+  --chart-4: #30d158;
+  --chart-5: #ff9f0a;
+
+  /* Shadows do almost nothing on a dark ground; depth comes from surface
+     lightness instead, so these stay subtle and mostly shape the edge. */
+  --elevation-1: 0 1px 2px rgba(0, 0, 0, 0.6);
+  --elevation-2: 0 8px 24px rgba(0, 0, 0, 0.55);
+  --elevation-3: 0 20px 60px rgba(0, 0, 0, 0.65);
+
+  --gradient-blue: linear-gradient(135deg, #0a84ff 0%, #5e5ce6 100%);
+  --gradient-violet: linear-gradient(135deg, #6f6cf7 0%, #c86bf5 100%);
+  --gradient-mint: linear-gradient(135deg, #30d158 0%, #0a84ff 100%);
+  --gradient-sunset: linear-gradient(135deg, #ff9f0a 0%, #ff375f 100%);
+
+  --sidebar: #151519;
+  --sidebar-foreground: #f5f5f7;
+  --sidebar-primary: #0a84ff;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1f1f25;
+  --sidebar-accent-foreground: #f5f5f7;
+  --sidebar-border: rgba(255, 255, 255, 0.09);
+  --sidebar-ring: rgba(10, 132, 255, 0.55);
 }
 
 @layer base {
@@ -126,8 +201,85 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Apple sets tight tracking on display text and relies on optical
+       sizing; -0.011em across the board is the closest single value to
+       how SF Pro Text actually sets. */
+    letter-spacing: -0.011em;
   }
   html {
     @apply font-sans;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  /* Headlines tighten further, the way SF Pro Display does above ~20px. */
+  h1,
+  h2 {
+    letter-spacing: -0.022em;
+  }
+  /* Only animate for people who haven't asked us not to. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* A card: the single most repeated shape in the references. Elevation
+     in light mode comes from white-on-grey, in dark mode from the
+     surface being lighter than the page — so the same class works in
+     both without a dark: override at every call site. */
+  .app-card {
+    background-color: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--elevation-1);
+  }
+
+  /* Hero cards — the saturated gradient tiles. Text is forced white
+     because these sit on colour in both themes. */
+  .app-card-gradient {
+    border-radius: var(--radius-xl);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: var(--elevation-2);
+  }
+  .grad-blue {
+    background-image: var(--gradient-blue);
+  }
+  .grad-violet {
+    background-image: var(--gradient-violet);
+  }
+  .grad-mint {
+    background-image: var(--gradient-mint);
+  }
+  .grad-sunset {
+    background-image: var(--gradient-sunset);
+  }
+
+  /* The translucent bar treatment from the references' headers and tab
+     bars. Falls back to an opaque surface where backdrop-filter isn't
+     supported, so text never lands on a transparent strip. */
+  .app-glass {
+    background-color: color-mix(in srgb, var(--surface) 72%, transparent);
+    border-bottom: 1px solid var(--hairline);
+  }
+  @supports (backdrop-filter: blur(1px)) {
+    .app-glass {
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+    }
+  }
+
+  /* Grouped-list row: hairline separators rather than boxes, matching
+     the wallet/settings lists in the references. */
+  .app-row {
+    border-bottom: 1px solid var(--hairline);
+  }
+  .app-row:last-child {
+    border-bottom: 0;
   }
 }

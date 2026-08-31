@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 import { Button } from '@/components/ui/button'
+import { ThemeToggle } from '@/components/theme-toggle'
 import { cn } from '@/lib/utils'
 
 import { signOut } from './actions'
@@ -32,49 +33,47 @@ export function AppNav({
   const pathname = usePathname()
 
   return (
-    <header className="border-b border-neutral-200 bg-white">
-      {/* Wider than the max-w-4xl content column on purpose: seven sections
-          plus the sign-out block don't fit 896px, and a header bar spanning
-          past its content is ordinary. It still wraps rather than
-          overflowing — the same seven links need ~620px, well past a 375px
-          phone. min-h-14 keeps the desktop height unchanged. */}
-      <div className="mx-auto flex min-h-14 w-full max-w-5xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-6 py-3 sm:py-0">
-        <nav className="flex flex-wrap items-center gap-x-4 gap-y-2">
+    /* Sticky translucent bar — the header treatment from the references.
+       Wider than the content column because seven sections plus the
+       account controls don't fit 896px, and it still wraps rather than
+       overflowing a phone. */
+    <header className="app-glass sticky top-0 z-40">
+      <div className="mx-auto flex min-h-16 w-full max-w-5xl flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-3 sm:px-6 sm:py-0">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
           <Link
             href="/dashboard"
-            className="text-[14px] font-medium tracking-tight text-neutral-900"
+            className="mr-1 text-[15px] font-semibold tracking-[-0.02em] text-foreground"
           >
             {brand}
           </Link>
-          {LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={cn(
-                'text-[12px] uppercase tracking-[0.1em] transition-colors',
-                isActive(pathname, link.href)
-                  ? 'text-neutral-900'
-                  : 'text-neutral-400 hover:text-neutral-900',
-              )}
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
+          <nav className="flex flex-wrap items-center gap-1">
+            {LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={isActive(pathname, link.href) ? 'page' : undefined}
+                className={cn(
+                  'rounded-full px-3 py-1.5 text-[13px] font-medium transition-colors',
+                  isActive(pathname, link.href)
+                    ? 'bg-secondary text-foreground'
+                    : 'text-muted-foreground hover:bg-secondary/60 hover:text-foreground',
+                )}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
+          <ThemeToggle />
           {email ? (
-            <span className="hidden text-[12px] text-neutral-400 lg:inline">
+            <span className="hidden text-[13px] text-muted-foreground xl:inline">
               {email}
             </span>
           ) : null}
           <form action={signOut}>
-            <Button
-              type="submit"
-              variant="ghost"
-              size="sm"
-              className="h-auto px-0 text-[12px] uppercase tracking-[0.1em] text-neutral-500 hover:bg-transparent hover:text-neutral-900 hover:underline"
-            >
+            <Button type="submit" variant="ghost" size="sm" className="text-muted-foreground">
               Sign out
             </Button>
           </form>

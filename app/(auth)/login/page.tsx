@@ -8,13 +8,13 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
-    <main className="flex min-h-dvh items-center justify-center bg-white px-6 py-16">
-      <div className="w-full max-w-[22rem]">
-        <header className="mb-12">
-          <h1 className="text-[22px] font-medium tracking-tight text-neutral-900">
+    <main className="flex min-h-dvh items-center justify-center bg-background px-6 py-16">
+      <div className="app-card w-full max-w-[24rem] p-8">
+        <header className="mb-8">
+          <h1 className="text-[28px] font-semibold tracking-[-0.02em] text-foreground">
             Invoices
           </h1>
-          <p className="mt-1 text-[13px] text-neutral-500">
+          <p className="mt-1 text-[13px] text-muted-foreground">
             Sign in to continue.
           </p>
         </header>

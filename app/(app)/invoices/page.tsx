@@ -56,34 +56,34 @@ export default async function InvoicesPage() {
   return (
     <div className="mx-auto w-full max-w-4xl">
       <div className="flex items-baseline justify-between gap-4">
-        <h1 className="text-[22px] font-medium tracking-tight text-neutral-900">
+        <h1 className="text-[28px] font-semibold tracking-[-0.02em] text-foreground">
           Invoices
         </h1>
         <Button
           asChild
-          className="h-auto rounded-none bg-neutral-900 px-4 py-2 text-[12px] uppercase tracking-[0.1em] text-white hover:bg-neutral-900/90"
-        >
+          >
           <Link href="/invoices/new">New invoice</Link>
         </Button>
       </div>
 
       {invoices && invoices.length > 0 ? (
-        <Table className="mt-8">
+        <div className="app-card mt-6 overflow-hidden">
+          <Table>
           <TableHeader>
-            <TableRow className="border-neutral-200 hover:bg-transparent">
-              <TableHead className="h-9 px-0 text-[11px] font-normal uppercase tracking-[0.1em] text-neutral-500">
+            <TableRow className="border-hairline hover:bg-transparent">
+              <TableHead className="h-11 px-4 text-[12px] font-medium text-muted-foreground">
                 Client
               </TableHead>
-              <TableHead className="h-9 px-0 text-[11px] font-normal uppercase tracking-[0.1em] text-neutral-500">
+              <TableHead className="h-11 px-4 text-[12px] font-medium text-muted-foreground">
                 Date
               </TableHead>
-              <TableHead className="h-9 px-0 text-[11px] font-normal uppercase tracking-[0.1em] text-neutral-500">
+              <TableHead className="h-11 px-4 text-[12px] font-medium text-muted-foreground">
                 Status
               </TableHead>
-              <TableHead className="h-9 px-0 text-right text-[11px] font-normal uppercase tracking-[0.1em] text-neutral-500">
+              <TableHead className="h-11 px-4 text-right text-[12px] font-medium text-muted-foreground">
                 Total
               </TableHead>
-              <TableHead className="h-9 px-0" />
+              <TableHead className="h-11 px-4" />
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -98,39 +98,39 @@ export default async function InvoicesPage() {
               })
 
               return (
-                <TableRow key={inv.id} className="border-neutral-200 hover:bg-neutral-50">
-                  <TableCell className="px-0 py-4">
+                <TableRow key={inv.id} className="border-hairline hover:bg-secondary/50">
+                  <TableCell className="px-4 py-3.5">
                     <Link
                       href={`/invoices/${inv.id}/edit`}
-                      className="text-[14px] text-neutral-900 hover:underline"
+                      className="text-[14px] text-foreground hover:underline"
                     >
                       {inv.bill_to_name}
                     </Link>
                   </TableCell>
-                  <TableCell className="px-0 py-4 text-[13px] text-neutral-500">
+                  <TableCell className="px-4 py-3.5 text-[13px] text-muted-foreground">
                     {new Date(inv.issue_date).toLocaleDateString('en-IN', {
                       day: '2-digit',
                       month: 'short',
                       year: 'numeric',
                     })}
                   </TableCell>
-                  <TableCell className="px-0 py-4">
+                  <TableCell className="px-4 py-3.5">
                     <StatusSelect
                       invoiceId={inv.id}
                       status={inv.status}
                       displayStatus={displayStatus}
                     />
                   </TableCell>
-                  <TableCell className="px-0 py-4 text-right text-[13px] tabular-nums text-neutral-900">
+                  <TableCell className="px-4 py-3.5 text-right text-[13px] tabular-nums text-foreground">
                     {formatPaise(inv.total_paise, {
                       showPaise: false,
                       currency: inv.currency,
                     })}
                   </TableCell>
-                  <TableCell className="px-0 py-4 text-right">
+                  <TableCell className="px-4 py-3.5 text-right">
                     <Link
                       href={`/invoices/${inv.id}/edit`}
-                      className="text-[11px] uppercase tracking-[0.1em] text-neutral-500 hover:text-neutral-900 hover:underline"
+                      className="text-[13px] font-medium text-primary hover:underline"
                     >
                       Edit
                     </Link>
@@ -140,27 +140,28 @@ export default async function InvoicesPage() {
             })}
           </TableBody>
         </Table>
+        </div>
       ) : (
-        <p className="mt-10 text-[13px] text-neutral-500">No invoices yet.</p>
+        <p className="mt-10 text-[13px] text-muted-foreground">No invoices yet.</p>
       )}
 
       {financialYears.length > 0 ? (
-        <div className="mt-10 flex flex-wrap items-baseline gap-x-4 gap-y-2 border-t border-neutral-200 pt-6">
-          <span className="text-[11px] uppercase tracking-[0.1em] text-neutral-400">
+        <div className="mt-10 flex flex-wrap items-baseline gap-x-4 gap-y-2 border-t border-border pt-6">
+          <span className="text-[13px] font-medium text-muted-foreground">
             Export for your CA
           </span>
           {financialYears.map((fy) => (
             <a
               key={fy}
               href={`/api/export/invoices?fy=${fy}`}
-              className="text-[12px] tabular-nums text-neutral-500 underline-offset-4 hover:text-neutral-900 hover:underline"
+              className="text-[12px] tabular-nums text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
             >
               FY {fy}
             </a>
           ))}
           <a
             href="/api/export/invoices"
-            className="text-[12px] text-neutral-500 underline-offset-4 hover:text-neutral-900 hover:underline"
+            className="text-[12px] text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             All
           </a>

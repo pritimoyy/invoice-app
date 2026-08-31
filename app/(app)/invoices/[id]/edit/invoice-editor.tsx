@@ -88,11 +88,12 @@ function parseExchangeRate(input: string): number | null {
 }
 
 const toolbarFieldClass =
-  'h-auto rounded-none border-0 border-b border-neutral-300 bg-transparent px-0 py-1.5 text-[13px] ' +
-  'text-neutral-900 outline-none transition-colors focus-visible:border-neutral-900 ' +
+  'h-10 rounded-xl border border-transparent bg-secondary px-3 text-[14px] ' +
+  'text-foreground outline-none transition-colors focus-visible:border-ring ' +
+  'focus-visible:ring-[3px] focus-visible:ring-ring/40 ' +
   'disabled:cursor-not-allowed disabled:opacity-50'
 
-const toolbarLabelClass = 'text-[10px] uppercase tracking-[0.1em] text-neutral-400'
+const toolbarLabelClass = 'text-[13px] font-medium text-muted-foreground'
 
 function newLineItem(defaultSacCode: string, defaultTaxRateBps: number): EditableLineItem {
   return {
@@ -564,7 +565,7 @@ export function InvoiceEditor({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4 border-b border-neutral-200 pb-6">
+      <div className="app-card flex flex-wrap items-end justify-between gap-x-8 gap-y-4 p-4 sm:p-5">
         <fieldset disabled={locked} className="contents">
           <div className="flex flex-wrap gap-x-8 gap-y-4">
             <div className="flex flex-col gap-2">
@@ -630,14 +631,14 @@ export function InvoiceEditor({
           </div>
         </fieldset>
 
-        <div className="flex gap-1 border border-neutral-300 p-0.5">
+        <div className="flex gap-0.5 rounded-full bg-secondary p-0.5">
           <button
             type="button"
             onClick={() => setView('edit')}
-            className={`px-3 py-1.5 text-[11px] uppercase tracking-[0.1em] transition-colors ${
+            className={`rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors ${
               view === 'edit'
-                ? 'bg-neutral-900 text-white'
-                : 'text-neutral-500 hover:text-neutral-900'
+                ? 'bg-surface text-foreground shadow-[var(--elevation-1)]'
+                : 'text-muted-foreground hover:text-foreground'
             }`}
           >
             Edit
@@ -645,10 +646,10 @@ export function InvoiceEditor({
           <button
             type="button"
             onClick={() => setView('pdf')}
-            className={`px-3 py-1.5 text-[11px] uppercase tracking-[0.1em] transition-colors ${
+            className={`rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors ${
               view === 'pdf'
-                ? 'bg-neutral-900 text-white'
-                : 'text-neutral-500 hover:text-neutral-900'
+                ? 'bg-surface text-foreground shadow-[var(--elevation-1)]'
+                : 'text-muted-foreground hover:text-foreground'
             }`}
           >
             Preview PDF
@@ -656,13 +657,13 @@ export function InvoiceEditor({
         </div>
       </div>
 
-      <div className="mx-auto w-full max-w-4xl overflow-hidden border border-neutral-200 shadow-sm">
+      <div className="app-card mx-auto w-full max-w-4xl overflow-hidden">
         {view === 'edit' ? (
           <fieldset disabled={locked} className="contents">
             <InvoiceDocument {...documentProps} />
           </fieldset>
         ) : (
-          <div className="aspect-[210/297] w-full bg-neutral-50">
+          <div className="aspect-[210/297] w-full bg-secondary">
             <InvoicePreview
               data={debouncedData.data}
               rows={debouncedData.rows}
@@ -672,9 +673,9 @@ export function InvoiceEditor({
         )}
       </div>
 
-      <div className="mx-auto flex w-full max-w-4xl items-center gap-4 border-t border-neutral-200 pt-6">
+      <div className="mx-auto flex w-full max-w-4xl flex-wrap items-center gap-4">
         {locked ? (
-          <p className="text-[13px] text-neutral-500">
+          <p className="text-[13px] text-muted-foreground">
             Sent — this invoice is locked from further edits.
           </p>
         ) : (
@@ -683,7 +684,7 @@ export function InvoiceEditor({
               type="button"
               disabled={pending || sendPending}
               onClick={handleSave}
-              className="h-auto rounded-none bg-neutral-900 px-6 py-3 text-[13px] uppercase tracking-[0.12em] text-white hover:bg-neutral-900/90 disabled:opacity-50"
+              size="lg"
             >
               {pending ? 'Saving…' : 'Save draft'}
             </Button>
@@ -691,19 +692,19 @@ export function InvoiceEditor({
               type="button"
               disabled={pending || sendPending}
               onClick={handleSend}
-              className="h-auto rounded-none border border-neutral-900 bg-transparent px-6 py-3 text-[13px] uppercase tracking-[0.12em] text-neutral-900 hover:bg-neutral-900 hover:text-white disabled:opacity-50"
+              size="lg" variant="outline"
             >
               {sendPending ? 'Sending…' : 'Send invoice'}
             </Button>
           </>
         )}
         {error ? (
-          <p role="alert" className="text-[13px] text-red-700">
+          <p role="alert" className="text-[13px] text-destructive">
             {error}
           </p>
         ) : null}
         {saved && !error && !locked ? (
-          <p role="status" className="text-[13px] text-neutral-500">
+          <p role="status" className="text-[13px] text-muted-foreground">
             Saved.
           </p>
         ) : null}

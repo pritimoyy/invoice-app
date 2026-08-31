@@ -21,7 +21,7 @@ export default async function NewInvoicePage() {
 
   return (
     <div className="mx-auto w-full max-w-2xl">
-      <h1 className="mb-12 text-[22px] font-medium tracking-tight text-neutral-900">
+      <h1 className="mb-8 text-[28px] font-semibold tracking-[-0.02em] text-foreground">
         New invoice
       </h1>
 
@@ -37,21 +37,21 @@ export default async function NewInvoicePage() {
             />
           </FormSection>
 
-          <div className="border-t border-neutral-200 pt-8">
+          <div className="pt-2">
             <Button
               type="submit"
-              className="h-auto rounded-none bg-neutral-900 px-6 py-3 text-[13px] uppercase tracking-[0.12em] text-white hover:bg-neutral-900/90"
+              size="lg"
             >
               Start invoice
             </Button>
           </div>
         </form>
       ) : (
-        <p className="text-[13px] text-neutral-500">
+        <p className="text-[13px] text-muted-foreground">
           You need a client before you can start an invoice.{' '}
           <Link
             href="/clients/new"
-            className="text-neutral-900 underline-offset-4 hover:underline"
+            className="text-foreground underline-offset-4 hover:underline"
           >
             Add one
           </Link>

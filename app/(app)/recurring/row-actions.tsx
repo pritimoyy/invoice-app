@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { deleteRecurring, generateFromRecurring, setRecurringActive } from './actions'
 
 const linkClass =
-  'h-auto px-0 text-[11px] uppercase tracking-[0.1em] text-neutral-500 hover:bg-transparent hover:text-neutral-900 hover:underline disabled:opacity-30'
+  'h-auto px-0 text-[13px] font-medium text-muted-foreground hover:bg-transparent hover:text-foreground disabled:opacity-30'
 
 export function RecurringRowActions({
   id,
@@ -33,7 +33,7 @@ export function RecurringRowActions({
           // try/catch here.
           startTransition(() => generateFromRecurring(id))
         }}
-        className={`${linkClass} ${isDue && isActive ? 'text-neutral-900' : ''}`}
+        className={`${linkClass} ${isDue && isActive ? 'text-foreground' : ''}`}
       >
         {pending ? 'Generating…' : 'Generate now'}
       </Button>
@@ -58,7 +58,7 @@ export function RecurringRowActions({
           if (!confirm('Remove this repeat schedule? The invoices it made are kept.')) return
           startTransition(() => deleteRecurring(id))
         }}
-        className="h-auto px-0 text-[11px] uppercase tracking-[0.1em] text-neutral-400 hover:bg-transparent hover:text-red-700 hover:underline disabled:opacity-30"
+        className="h-auto px-0 text-[13px] font-medium text-muted-foreground hover:bg-transparent hover:text-destructive disabled:opacity-30"
       >
         Remove
       </Button>

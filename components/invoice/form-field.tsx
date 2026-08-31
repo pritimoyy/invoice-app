@@ -3,19 +3,21 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 
 /**
- * The app's one form language: a bottom-border field with an uppercase
- * micro-label above it, no boxed borders. Built on the shadcn primitives
- * (for the accessibility and state handling) but restyled away from their
- * boxed, rounded default — the brief is explicit that a default shadcn look
- * isn't the target here.
+ * The app's one form language, Apple-flavoured: filled, rounded fields on
+ * a card, with a sentence-case label above.
+ *
+ * The previous version used bottom-border-only fields and uppercase
+ * tracked micro-labels. Both are gone deliberately — a filled control
+ * with a real hit area is what the references use everywhere, and it's
+ * also the more usable target on a phone.
  */
 const fieldClass =
-  'h-auto w-full rounded-none border-0 border-b border-neutral-300 bg-transparent px-0 py-2 text-[15px] ' +
-  'text-neutral-900 shadow-none transition-colors placeholder:text-neutral-400 ' +
-  'focus-visible:border-neutral-900 focus-visible:ring-0 disabled:opacity-50'
+  'h-11 w-full rounded-xl border border-transparent bg-secondary px-3.5 text-[15px] ' +
+  'text-foreground shadow-none transition-colors placeholder:text-muted-foreground ' +
+  'focus-visible:border-ring focus-visible:bg-surface focus-visible:ring-[3px] focus-visible:ring-ring/40 ' +
+  'disabled:cursor-not-allowed disabled:opacity-50'
 
-const labelClass =
-  'text-[11px] uppercase tracking-[0.12em] text-neutral-500 font-normal'
+const labelClass = 'text-[13px] font-medium text-muted-foreground'
 
 export function FormField({
   name,
@@ -51,7 +53,7 @@ export function FormField({
         disabled={disabled}
         className={fieldClass}
       />
-      {hint ? <p className="text-[12px] text-neutral-400">{hint}</p> : null}
+      {hint ? <p className="text-[12px] text-muted-foreground">{hint}</p> : null}
     </div>
   )
 }
@@ -80,7 +82,7 @@ export function FormTextarea({
         rows={rows}
         defaultValue={defaultValue ?? ''}
         disabled={disabled}
-        className={`${fieldClass} resize-y`}
+        className={`${fieldClass} h-auto resize-y py-2.5 leading-relaxed`}
       />
     </div>
   )
@@ -110,13 +112,22 @@ export function FormSelect({
       </Label>
       {/* A plain, uncontrolled native select submits with the form the
           same way an <input> does — no client state needed for a value
-          that's just read out of FormData on submit. */}
+          that's just read out of FormData on submit. The caret is drawn
+          as a background image so the control keeps one rounded shape
+          instead of the platform's boxed dropdown chrome. */}
       <select
         id={name}
         name={name}
         defaultValue={defaultValue ?? ''}
         disabled={disabled}
-        className={fieldClass}
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6' fill='none' stroke='%238e8e93' stroke-width='1.5' stroke-linecap='round'%3E%3Cpath d='M1 1l4 4 4-4'/%3E%3C/svg%3E\")",
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'right 14px center',
+          backgroundSize: '10px 6px',
+        }}
+        className={`${fieldClass} cursor-pointer appearance-none pr-10`}
       >
         {placeholder ? <option value="">{placeholder}</option> : null}
         {options.map((o) => (
@@ -125,7 +136,7 @@ export function FormSelect({
           </option>
         ))}
       </select>
-      {hint ? <p className="text-[12px] text-neutral-400">{hint}</p> : null}
+      {hint ? <p className="text-[12px] text-muted-foreground">{hint}</p> : null}
     </div>
   )
 }
@@ -138,11 +149,9 @@ export function FormSection({
   children: React.ReactNode
 }) {
   return (
-    <section className="border-t border-neutral-200 pt-8">
-      <h2 className="mb-6 text-[11px] uppercase tracking-[0.12em] text-neutral-400">
-        {title}
-      </h2>
-      <div className="grid gap-6 sm:grid-cols-2">{children}</div>
+    <section className="app-card p-5 sm:p-6">
+      <h2 className="mb-5 text-[17px] font-semibold text-foreground">{title}</h2>
+      <div className="grid gap-5 sm:grid-cols-2">{children}</div>
     </section>
   )
 }

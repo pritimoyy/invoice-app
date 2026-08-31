@@ -47,9 +47,10 @@ const PAID_METHODS: { method: PaymentMethod; label: string }[] = [
 const PAID_PREFIX = 'paid:'
 
 const selectClass =
-  'h-auto w-fit cursor-pointer appearance-none rounded-none border border-neutral-200 bg-transparent ' +
-  'py-0.5 pl-1.5 pr-5 text-[10px] uppercase tracking-[0.1em] outline-none transition-colors ' +
-  'hover:border-neutral-400 focus-visible:border-neutral-900 disabled:cursor-not-allowed disabled:opacity-60'
+  'h-7 w-fit cursor-pointer appearance-none rounded-full border border-hairline bg-secondary ' +
+  'py-0 pl-3 pr-7 text-[12px] font-medium outline-none transition-colors ' +
+  'hover:bg-accent focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/40 ' +
+  'disabled:cursor-not-allowed disabled:opacity-60'
 
 // A caret drawn as a background image rather than an adjacent element:
 // keeps the whole control one hit target the width of the badge, instead
@@ -58,8 +59,8 @@ const caretStyle = {
   backgroundImage:
     "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6' fill='none' stroke='%23a3a3a3' stroke-width='1.5'%3E%3Cpath d='M1 1l4 4 4-4'/%3E%3C/svg%3E\")",
   backgroundRepeat: 'no-repeat',
-  backgroundPosition: 'right 5px center',
-  backgroundSize: '7px 5px',
+  backgroundPosition: 'right 9px center',
+  backgroundSize: '9px 6px',
 }
 
 export function StatusSelect({

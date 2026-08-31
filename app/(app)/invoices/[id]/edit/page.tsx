@@ -92,7 +92,7 @@ export default async function EditInvoicePage({
     <div className="mx-auto w-full max-w-4xl">
       <div className="mb-8 flex items-baseline justify-between gap-4">
         <div className="flex items-baseline gap-3">
-          <h1 className="text-[22px] font-medium tracking-tight text-neutral-900">
+          <h1 className="text-[28px] font-semibold tracking-[-0.02em] text-foreground">
             {invoice.bill_to_name}
           </h1>
           <StatusSelect
@@ -102,7 +102,7 @@ export default async function EditInvoicePage({
             allowSend={false}
           />
           {invoice.sent_at ? (
-            <span className="text-[11px] text-neutral-400">
+            <span className="text-[11px] text-muted-foreground">
               Sent{' '}
               {new Date(invoice.sent_at).toLocaleDateString('en-IN', {
                 day: '2-digit',
@@ -117,7 +117,7 @@ export default async function EditInvoicePage({
             href={`/api/invoices/${invoice.id}/pdf`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[11px] uppercase tracking-[0.12em] text-neutral-500 underline-offset-4 hover:text-neutral-900 hover:underline"
+            className="text-[13px] font-medium text-primary hover:underline"
           >
             Download PDF
           </a>
@@ -126,14 +126,14 @@ export default async function EditInvoicePage({
               href={`/i/${invoice.public_token}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[11px] uppercase tracking-[0.12em] text-neutral-500 underline-offset-4 hover:text-neutral-900 hover:underline"
+              className="text-[13px] font-medium text-primary hover:underline"
             >
               Public link
             </a>
           ) : null}
           <Link
             href={isEstimate ? '/estimates' : '/invoices'}
-            className="text-[11px] uppercase tracking-[0.12em] text-neutral-500 underline-offset-4 hover:text-neutral-900 hover:underline"
+            className="text-[13px] font-medium text-primary hover:underline"
           >
             {isEstimate ? 'Estimates' : 'Invoices'}
           </Link>

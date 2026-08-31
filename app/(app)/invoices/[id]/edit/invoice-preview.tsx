@@ -48,7 +48,7 @@ export function InvoicePreview({
 
   if (!mounted) {
     return (
-      <div className="flex h-full min-h-[600px] items-center justify-center bg-neutral-50 text-[12px] text-neutral-400">
+      <div className="flex h-full min-h-[600px] items-center justify-center bg-secondary text-[12px] text-muted-foreground">
         Loading preview…
       </div>
     )

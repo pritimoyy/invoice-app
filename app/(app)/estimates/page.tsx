@@ -44,77 +44,77 @@ export default async function EstimatesPage() {
   return (
     <div className="mx-auto w-full max-w-4xl">
       <div className="flex items-baseline justify-between gap-4">
-        <h1 className="text-[22px] font-medium tracking-tight text-neutral-900">
+        <h1 className="text-[28px] font-semibold tracking-[-0.02em] text-foreground">
           Estimates
         </h1>
         <Button
           asChild
-          className="h-auto rounded-none bg-neutral-900 px-4 py-2 text-[12px] uppercase tracking-[0.1em] text-white hover:bg-neutral-900/90"
-        >
+          >
           <Link href="/estimates/new">New estimate</Link>
         </Button>
       </div>
 
       {estimates && estimates.length > 0 ? (
-        <Table className="mt-8">
+        <div className="app-card mt-6 overflow-hidden">
+          <Table>
           <TableHeader>
-            <TableRow className="border-neutral-200 hover:bg-transparent">
-              <TableHead className="h-9 px-0 text-[11px] font-normal uppercase tracking-[0.1em] text-neutral-500">
+            <TableRow className="border-hairline hover:bg-transparent">
+              <TableHead className="h-11 px-4 text-[12px] font-medium text-muted-foreground">
                 Client
               </TableHead>
-              <TableHead className="h-9 px-0 text-[11px] font-normal uppercase tracking-[0.1em] text-neutral-500">
+              <TableHead className="h-11 px-4 text-[12px] font-medium text-muted-foreground">
                 Date
               </TableHead>
-              <TableHead className="h-9 px-0 text-[11px] font-normal uppercase tracking-[0.1em] text-neutral-500">
+              <TableHead className="h-11 px-4 text-[12px] font-medium text-muted-foreground">
                 Status
               </TableHead>
-              <TableHead className="h-9 px-0 text-right text-[11px] font-normal uppercase tracking-[0.1em] text-neutral-500">
+              <TableHead className="h-11 px-4 text-right text-[12px] font-medium text-muted-foreground">
                 Total
               </TableHead>
-              <TableHead className="h-9 px-0" />
+              <TableHead className="h-11 px-4" />
             </TableRow>
           </TableHeader>
           <TableBody>
             {estimates.map((est) => {
               const isConverted = convertedIds.has(est.id)
               return (
-                <TableRow key={est.id} className="border-neutral-200 hover:bg-neutral-50">
-                  <TableCell className="px-0 py-4">
+                <TableRow key={est.id} className="border-hairline hover:bg-secondary/50">
+                  <TableCell className="px-4 py-3.5">
                     <Link
                       href={`/invoices/${est.id}/edit`}
-                      className="text-[14px] text-neutral-900 hover:underline"
+                      className="text-[14px] text-foreground hover:underline"
                     >
                       {est.bill_to_name}
                     </Link>
                   </TableCell>
-                  <TableCell className="px-0 py-4 text-[13px] text-neutral-500">
+                  <TableCell className="px-4 py-3.5 text-[13px] text-muted-foreground">
                     {new Date(est.issue_date).toLocaleDateString('en-IN', {
                       day: '2-digit',
                       month: 'short',
                       year: 'numeric',
                     })}
                   </TableCell>
-                  <TableCell className="px-0 py-4">
+                  <TableCell className="px-4 py-3.5">
                     <Badge
                       variant="outline"
-                      className={`h-auto rounded-none px-1.5 py-0.5 text-[10px] uppercase tracking-[0.1em] ${
-                        isConverted ? 'text-emerald-700' : 'text-neutral-500'
+                      className={`h-auto px-2 py-0.5 text-[11px] font-medium ${
+                        isConverted ? 'text-success' : 'text-muted-foreground'
                       }`}
                     >
                       {isConverted ? 'Invoiced' : est.status === 'draft' ? 'Draft' : 'Sent'}
                     </Badge>
                   </TableCell>
-                  <TableCell className="px-0 py-4 text-right text-[13px] tabular-nums text-neutral-900">
+                  <TableCell className="px-4 py-3.5 text-right text-[13px] tabular-nums text-foreground">
                     {formatPaise(est.total_paise, {
                       showPaise: false,
                       currency: est.currency,
                     })}
                   </TableCell>
-                  <TableCell className="px-0 py-4 text-right">
+                  <TableCell className="px-4 py-3.5 text-right">
                     <div className="flex items-center justify-end gap-4">
                       <Link
                         href={`/invoices/${est.id}/edit`}
-                        className="text-[11px] uppercase tracking-[0.1em] text-neutral-500 hover:text-neutral-900 hover:underline"
+                        className="text-[13px] font-medium text-primary hover:underline"
                       >
                         Edit
                       </Link>
@@ -128,8 +128,9 @@ export default async function EstimatesPage() {
             })}
           </TableBody>
         </Table>
+        </div>
       ) : (
-        <p className="mt-10 text-[13px] text-neutral-500">
+        <p className="mt-10 text-[13px] text-muted-foreground">
           No estimates yet. An estimate is a quote you can turn into an invoice once
           it&apos;s accepted.
         </p>

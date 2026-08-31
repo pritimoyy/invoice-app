@@ -22,7 +22,7 @@ export function ConvertEstimateButton({ estimateId }: { estimateId: string }) {
         // redirect surfaces as a raw error instead of navigating.
         startTransition(() => convertEstimateToInvoice(estimateId))
       }}
-      className="h-auto px-0 text-[11px] uppercase tracking-[0.1em] text-neutral-500 hover:bg-transparent hover:text-neutral-900 hover:underline"
+      className="h-auto px-0 text-[13px] font-medium text-muted-foreground hover:bg-transparent hover:text-foreground"
     >
       {pending ? 'Converting…' : 'Convert to invoice'}
     </Button>

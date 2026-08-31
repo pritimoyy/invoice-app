@@ -42,7 +42,7 @@ export default async function NewRecurringPage() {
 
   return (
     <div className="mx-auto w-full max-w-2xl">
-      <h1 className="mb-12 text-[22px] font-medium tracking-tight text-neutral-900">
+      <h1 className="mb-8 text-[28px] font-semibold tracking-[-0.02em] text-foreground">
         Repeat an invoice
       </h1>
 
@@ -72,20 +72,20 @@ export default async function NewRecurringPage() {
             />
           </FormSection>
 
-          <div className="border-t border-neutral-200 pt-8">
+          <div className="pt-2">
             <Button
               type="submit"
-              className="h-auto rounded-none bg-neutral-900 px-6 py-3 text-[13px] uppercase tracking-[0.12em] text-white hover:bg-neutral-900/90"
+              size="lg"
             >
               Save schedule
             </Button>
           </div>
         </form>
       ) : (
-        <p className="text-[13px] text-neutral-500">
+        <p className="text-[13px] text-muted-foreground">
           You need a sent invoice to repeat — and every one you have is already on a
           schedule.{' '}
-          <Link href="/invoices" className="text-neutral-900 underline-offset-4 hover:underline">
+          <Link href="/invoices" className="text-foreground underline-offset-4 hover:underline">
             Back to invoices
           </Link>
           .

@@ -34,7 +34,7 @@ export default async function SettingsPage() {
 
   return (
     <div className="mx-auto w-full max-w-2xl">
-      <h1 className="mb-12 text-[22px] font-medium tracking-tight text-neutral-900">
+      <h1 className="mb-8 text-[28px] font-semibold tracking-[-0.02em] text-foreground">
         Settings
       </h1>
 
