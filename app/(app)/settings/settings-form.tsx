@@ -2,6 +2,8 @@
 
 import { useActionState } from 'react'
 
+import { Button } from '@/components/ui/button'
+import { FormField, FormSection, FormSelect, FormTextarea } from '@/components/invoice/form-field'
 import { GST_STATES } from '@/lib/gst-states'
 import type { Database } from '@/types/database'
 
@@ -11,66 +13,13 @@ type Profile = Database['public']['Tables']['profiles']['Row']
 
 const initialState: SettingsState = { error: null, saved: false }
 
-const inputClass =
-  'w-full border-b border-neutral-300 bg-transparent pb-2 text-[15px] ' +
-  'text-neutral-900 outline-none transition-colors placeholder:text-neutral-400 ' +
-  'focus:border-neutral-900 disabled:opacity-50'
-
 const labelClass =
-  'block text-[11px] uppercase tracking-[0.12em] text-neutral-500'
+  'text-[11px] uppercase tracking-[0.12em] text-neutral-500 font-normal'
 
-function Field({
-  name,
-  label,
-  defaultValue,
-  type = 'text',
-  required = false,
-  placeholder,
-  disabled,
-}: {
-  name: string
-  label: string
-  defaultValue?: string | null
-  type?: string
-  required?: boolean
-  placeholder?: string
-  disabled?: boolean
-}) {
-  return (
-    <div className="flex flex-col gap-2">
-      <label className={labelClass} htmlFor={name}>
-        {label}
-      </label>
-      <input
-        id={name}
-        name={name}
-        type={type}
-        required={required}
-        placeholder={placeholder}
-        defaultValue={defaultValue ?? ''}
-        disabled={disabled}
-        className={inputClass}
-      />
-    </div>
-  )
-}
-
-function Section({
-  title,
-  children,
-}: {
-  title: string
-  children: React.ReactNode
-}) {
-  return (
-    <section className="border-t border-neutral-200 pt-8">
-      <h2 className="mb-6 text-[11px] uppercase tracking-[0.12em] text-neutral-400">
-        {title}
-      </h2>
-      <div className="grid gap-6 sm:grid-cols-2">{children}</div>
-    </section>
-  )
-}
+const STATE_OPTIONS = GST_STATES.map((s) => ({
+  value: s.code,
+  label: `${s.code} — ${s.name}`,
+}))
 
 export function SettingsForm({
   profile,
@@ -89,101 +38,86 @@ export function SettingsForm({
         value={profile?.logo_path ?? ''}
       />
 
-      <Section title="Business">
-        <Field
+      <FormSection title="Business">
+        <FormField
           name="legal_name"
           label="Legal name"
           required
           defaultValue={profile?.legal_name}
           disabled={pending}
         />
-        <Field
+        <FormField
           name="trade_name"
           label="Trade name"
           defaultValue={profile?.trade_name}
           disabled={pending}
         />
-        <Field
+        <FormField
           name="email"
           label="Email"
           type="email"
           defaultValue={profile?.email}
           disabled={pending}
         />
-        <Field
+        <FormField
           name="phone"
           label="Phone"
           defaultValue={profile?.phone}
           disabled={pending}
         />
-      </Section>
+      </FormSection>
 
-      <Section title="Address">
-        <Field
+      <FormSection title="Address">
+        <FormField
           name="address_line1"
           label="Address line 1"
           defaultValue={profile?.address_line1}
           disabled={pending}
         />
-        <Field
+        <FormField
           name="address_line2"
           label="Address line 2"
           defaultValue={profile?.address_line2}
           disabled={pending}
         />
-        <Field
+        <FormField
           name="city"
           label="City"
           defaultValue={profile?.city}
           disabled={pending}
         />
-        <Field
+        <FormField
           name="postal_code"
           label="PIN code"
           defaultValue={profile?.postal_code}
           disabled={pending}
         />
+        <FormSelect
+          name="state_code"
+          label="State"
+          defaultValue={profile?.state_code ?? ''}
+          options={STATE_OPTIONS}
+          placeholder="Select a state"
+          disabled={pending}
+          hint="Drives intra-state vs inter-state tax. The name is derived from the code, so the two can't drift."
+        />
+      </FormSection>
 
-        <div className="flex flex-col gap-2">
-          <label className={labelClass} htmlFor="state_code">
-            State
-          </label>
-          <select
-            id="state_code"
-            name="state_code"
-            defaultValue={profile?.state_code ?? ''}
-            disabled={pending}
-            className={inputClass}
-          >
-            <option value="">Select a state</option>
-            {GST_STATES.map((s) => (
-              <option key={s.code} value={s.code}>
-                {s.code} — {s.name}
-              </option>
-            ))}
-          </select>
-          <p className="text-[12px] text-neutral-400">
-            Drives intra-state vs inter-state tax. The name is derived from
-            the code, so the two can&apos;t drift.
-          </p>
-        </div>
-      </Section>
-
-      <Section title="Tax identity">
-        <Field
+      <FormSection title="Tax identity">
+        <FormField
           name="gstin"
           label="GSTIN"
           defaultValue={profile?.gstin}
           placeholder="19XXXXXXXXXXXZX"
           disabled={pending}
         />
-        <Field
+        <FormField
           name="pan"
           label="PAN"
           defaultValue={profile?.pan}
           disabled={pending}
         />
-        <Field
+        <FormField
           name="default_sac_code"
           label="Default SAC code"
           defaultValue={profile?.default_sac_code}
@@ -213,71 +147,64 @@ export function SettingsForm({
             LUT on file (for export invoices)
           </label>
         </div>
-      </Section>
+      </FormSection>
 
-      <Section title="Payment details">
-        <Field
+      <FormSection title="Payment details">
+        <FormField
           name="upi_id"
           label="UPI ID"
           defaultValue={profile?.upi_id}
           disabled={pending}
         />
-        <Field
+        <FormField
           name="bank_account_name"
           label="Account name"
           defaultValue={profile?.bank_account_name}
           disabled={pending}
         />
-        <Field
+        <FormField
           name="bank_name"
           label="Bank"
           defaultValue={profile?.bank_name}
           disabled={pending}
         />
-        <Field
+        <FormField
           name="bank_account_no"
           label="Account number"
           defaultValue={profile?.bank_account_no}
           disabled={pending}
         />
-        <Field
+        <FormField
           name="bank_ifsc"
           label="IFSC"
           defaultValue={profile?.bank_ifsc}
           disabled={pending}
         />
-      </Section>
+      </FormSection>
 
-      <Section title="Invoicing">
-        <Field
+      <FormSection title="Invoicing">
+        <FormField
           name="invoice_prefix"
           label="Invoice prefix"
           defaultValue={profile?.invoice_prefix ?? 'INV'}
           disabled={pending}
         />
-        <Field
+        <FormField
           name="default_terms_days"
           label="Payment terms (days)"
           type="number"
           defaultValue={String(profile?.default_terms_days ?? 15)}
           disabled={pending}
         />
-        <div className="sm:col-span-2 flex flex-col gap-2">
-          <label className={labelClass} htmlFor="notes_default">
-            Default notes / terms
-          </label>
-          <textarea
-            id="notes_default"
-            name="notes_default"
-            rows={3}
-            defaultValue={profile?.notes_default ?? ''}
-            disabled={pending}
-            className={`${inputClass} resize-y`}
-          />
-        </div>
-      </Section>
+        <FormTextarea
+          name="notes_default"
+          label="Default notes / terms"
+          defaultValue={profile?.notes_default}
+          disabled={pending}
+        />
+      </FormSection>
 
-      <Section title="Logo">
+      <FormSection title="Logo">
         <div className="sm:col-span-2 flex flex-col gap-4">
           {logoUrl ? (
             <div className="flex items-center gap-4">
@@ -315,16 +242,16 @@ export function SettingsForm({
             </p>
           </div>
         </div>
-      </Section>
+      </FormSection>
 
       <div className="flex items-center gap-4 border-t border-neutral-200 pt-8">
-        <button
+        <Button
           type="submit"
           disabled={pending}
-          className="bg-neutral-900 px-6 py-3 text-[13px] uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+          className="h-auto rounded-none bg-neutral-900 px-6 py-3 text-[13px] uppercase tracking-[0.12em] text-white hover:bg-neutral-900/90 disabled:opacity-50"
         >
           {pending ? 'Saving…' : 'Save'}
-        </button>
+        </Button>
 
         {state.error ? (
           <p role="alert" className="text-[13px] text-red-700">

@@ -2,6 +2,8 @@ import { redirect } from 'next/navigation'
 
 import { createClient } from '@/lib/supabase/server'
 
+import { AppNav } from './nav'
+
 /**
  * Authoritative auth boundary for the signed-in half of the app.
  *
@@ -15,6 +17,9 @@ import { createClient } from '@/lib/supabase/server'
  * it. It is a gate, not the security boundary. The security boundary is RLS —
  * every query in this app goes out under the anon key with the user's session,
  * so a page that somehow rendered without a valid user still reads nothing.
+ *
+ * This is also where the shared chrome lives — one nav bar, rendered once,
+ * rather than every page hand-rolling its own header and links.
  */
 export default async function AppLayout({
   children,
@@ -30,5 +35,10 @@ export default async function AppLayout({
     redirect('/login')
   }
 
-  return <>{children}</>
+  return (
+    <div className="min-h-dvh bg-white">
+      <AppNav email={user.email} />
+      <main className="mx-auto w-full max-w-4xl px-6 py-12">{children}</main>
+    </div>
+  )
 }

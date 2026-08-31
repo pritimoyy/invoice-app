@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 
 import { createClient } from '@/lib/supabase/server'
 
@@ -34,22 +33,12 @@ export default async function SettingsPage() {
   }
 
   return (
-    <main className="min-h-dvh bg-white px-6 py-16">
-      <div className="mx-auto w-full max-w-2xl">
-        <header className="mb-12 flex items-baseline justify-between gap-4">
-          <h1 className="text-[22px] font-medium tracking-tight text-neutral-900">
-            Settings
-          </h1>
-          <Link
-            href="/dashboard"
-            className="text-[11px] uppercase tracking-[0.12em] text-neutral-500 underline-offset-4 hover:text-neutral-900 hover:underline"
-          >
-            Dashboard
-          </Link>
-        </header>
+    <div className="mx-auto w-full max-w-2xl">
+      <h1 className="mb-12 text-[22px] font-medium tracking-tight text-neutral-900">
+        Settings
+      </h1>
 
-        <SettingsForm profile={profile} logoUrl={logoUrl} />
-      </div>
-    </main>
+      <SettingsForm profile={profile} logoUrl={logoUrl} />
+    </div>
   )
 }
