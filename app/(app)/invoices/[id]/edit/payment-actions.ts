@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
+import { todayIso } from '@/lib/dates'
 import { createClient } from '@/lib/supabase/server'
 import type { Database } from '@/types/database'
 
@@ -110,11 +111,112 @@ export async function recordPayment(
 }
 
 /**
- * Hard delete — correcting a mis-entered payment (wrong amount, wrong
- * invoice) by removing and re-adding is simpler than building an edit
- * form for what should be a rare mistake. Recomputes status afterward:
- * deleting the payment that tipped an invoice into 'paid' must be able to
- * drop it back to 'partially_paid' or 'sent'.
+ * "Mark as paid" from the status dropdown — shorthand for recording one
+ * payment that settles whatever is still outstanding, since an invoice
+ * isn't paid because a status field says so, it's paid because money
+ * arrived. The amount comes from invoice_balances.balance_paise (already
+ * integer paise, never recomputed here) so this can't drift from what the
+ * payments section shows.
+ *
+ * The method is passed in rather than assumed — the status dropdown
+ * offers one entry per method, so "paid" never silently records a payment
+ * channel that didn't happen.
+ */
+export async function markInvoicePaid(
+  invoiceId: string,
+  method: PaymentMethod,
+): Promise<PaymentActionState> {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) {
+    return { error: 'Your session has expired — reload and sign in again.' }
+  }
+
+  const { data: balance } = await supabase
+    .from('invoice_balances')
+    .select('status, balance_paise')
+    .eq('id', invoiceId)
+    .maybeSingle()
+
+  if (!balance) {
+    return { error: 'Invoice not found.' }
+  }
+  if (balance.status !== 'sent' && balance.status !== 'partially_paid') {
+    return { error: 'Only a sent or partially paid invoice can be marked paid.' }
+  }
+
+  const outstandingPaise = balance.balance_paise ?? 0
+  if (outstandingPaise <= 0) {
+    return { error: 'This invoice has nothing outstanding to settle.' }
+  }
+
+  const { error } = await supabase.from('payments').insert({
+    user_id: user.id,
+    invoice_id: invoiceId,
+    amount_paise: outstandingPaise,
+    paid_on: todayIso(),
+    method,
+  })
+  if (error) {
+    return { error: error.message }
+  }
+
+  await recomputeInvoiceStatus(supabase, invoiceId)
+
+  revalidatePath(`/invoices/${invoiceId}/edit`)
+  revalidatePath('/invoices')
+  return { error: null }
+}
+
+/**
+ * Correct an already-recorded payment in place. Recomputes status after,
+ * for the same reason delete does: editing ₹10,000 down to ₹1,000 has to
+ * be able to pull an invoice back out of 'paid'.
+ */
+export async function updatePayment(
+  paymentId: string,
+  invoiceId: string,
+  input: RecordPaymentInput,
+): Promise<PaymentActionState> {
+  if (input.amountPaise <= 0) {
+    return { error: 'Payment amount must be greater than zero.' }
+  }
+  if (input.tdsPaise < 0 || input.feesPaise < 0) {
+    return { error: 'TDS and fees cannot be negative.' }
+  }
+
+  const supabase = await createClient()
+
+  // RLS scopes the row to its owner, so a mismatched id updates nothing
+  // rather than needing a separate ownership check here.
+  const { error } = await supabase
+    .from('payments')
+    .update({
+      amount_paise: input.amountPaise,
+      paid_on: input.paidOn,
+      method: input.method,
+      reference: input.reference || null,
+      tds_paise: input.tdsPaise,
+      fees_paise: input.feesPaise,
+    })
+    .eq('id', paymentId)
+  if (error) {
+    return { error: error.message }
+  }
+
+  await recomputeInvoiceStatus(supabase, invoiceId)
+
+  revalidatePath(`/invoices/${invoiceId}/edit`)
+  revalidatePath('/invoices')
+  return { error: null }
+}
+
+/**
+ * Hard delete. Recomputes status afterward: deleting the payment that
+ * tipped an invoice into 'paid' must be able to drop it back to
+ * 'partially_paid' or 'sent'.
  */
 export async function deletePayment(paymentId: string, invoiceId: string) {
   const supabase = await createClient()

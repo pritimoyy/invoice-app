@@ -1,15 +1,12 @@
-import { renderToBuffer } from '@react-pdf/renderer'
 import { NextResponse } from 'next/server'
 
-import { registerFonts } from '@/lib/pdf/fonts/register'
 import { loadPublicInvoice } from '@/lib/pdf/load-public-invoice'
-import { pickTemplate } from '@/lib/pdf/pick-template'
+import { renderInvoicePdf } from '@/lib/pdf/render'
+import { createServiceClient } from '@/lib/supabase/service'
 
 // fontkit reads the registered .ttf files via fs at request time — this
 // route needs the Node runtime, not Edge, which can't do that.
 export const runtime = 'nodejs'
-
-registerFonts()
 
 export async function GET(
   _request: Request,
@@ -22,13 +19,22 @@ export async function GET(
     return NextResponse.json({ error: 'Invoice not found' }, { status: 404 })
   }
 
-  const Template = pickTemplate(invoice.template)
-  const buffer = await renderToBuffer(<Template data={invoice.data} rows={invoice.rows} />)
+  const headers = {
+    'Content-Type': 'application/pdf',
+    'Content-Disposition': `inline; filename="${invoice.number}.pdf"`,
+  }
 
-  return new NextResponse(new Uint8Array(buffer), {
-    headers: {
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': `inline; filename="${invoice.number}.pdf"`,
-    },
-  })
+  // Serve the copy frozen at send time when there is one, so the client's
+  // download and the owner's are byte-identical.
+  if (invoice.pdfPath) {
+    const { data: cached } = await createServiceClient()
+      .storage.from('invoices')
+      .download(invoice.pdfPath)
+    if (cached) {
+      return new NextResponse(await cached.arrayBuffer(), { headers })
+    }
+  }
+
+  const buffer = await renderInvoicePdf(invoice.data, invoice.rows, invoice.template)
+  return new NextResponse(new Uint8Array(buffer), { headers })
 }

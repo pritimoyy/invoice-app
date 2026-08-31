@@ -3,9 +3,17 @@
 import { useState, useTransition } from 'react'
 
 import { Button } from '@/components/ui/button'
+import { todayIso } from '@/lib/dates'
 import { formatPaise, parseRupeesToPaise } from '@/lib/money'
 
-import { deletePayment, recordPayment, type PaymentMethod } from './payment-actions'
+import { paiseToEditableString } from '@/lib/money'
+
+import {
+  deletePayment,
+  recordPayment,
+  updatePayment,
+  type PaymentMethod,
+} from './payment-actions'
 
 export type PaymentRow = {
   id: string
@@ -14,6 +22,7 @@ export type PaymentRow = {
   method: PaymentMethod
   reference: string | null
   tds_paise: number
+  fees_paise: number
 }
 
 const METHOD_OPTIONS: { value: PaymentMethod; label: string }[] = [
@@ -29,10 +38,6 @@ const fieldLabel = 'text-[10px] uppercase tracking-[0.1em] text-neutral-400'
 const fieldInput =
   'rounded-none border-0 border-b border-neutral-300 bg-transparent py-1.5 text-[13px] ' +
   'text-neutral-900 outline-none transition-colors focus-visible:border-neutral-900'
-
-function todayIso() {
-  return new Date().toISOString().slice(0, 10)
-}
 
 export function PaymentsSection({
   invoiceId,
@@ -57,8 +62,11 @@ export function PaymentsSection({
   const [fees, setFees] = useState('0.00')
   const [error, setError] = useState<string | null>(null)
   const [pending, startTransition] = useTransition()
+  // null = the form is adding a new payment; an id = it's editing that one.
+  const [editingId, setEditingId] = useState<string | null>(null)
 
   function resetForm() {
+    setEditingId(null)
     setAmount('')
     setPaidOn(todayIso())
     setMethod('upi')
@@ -67,7 +75,18 @@ export function PaymentsSection({
     setFees('0.00')
   }
 
-  function handleAdd() {
+  function startEditing(p: PaymentRow) {
+    setError(null)
+    setEditingId(p.id)
+    setAmount(paiseToEditableString(p.amount_paise))
+    setPaidOn(p.paid_on)
+    setMethod(p.method)
+    setReference(p.reference ?? '')
+    setTds(paiseToEditableString(p.tds_paise))
+    setFees(paiseToEditableString(p.fees_paise))
+  }
+
+  function handleSubmit() {
     setError(null)
     const amountPaise = parseRupeesToPaise(amount)
     const tdsPaise = parseRupeesToPaise(tds)
@@ -81,15 +100,11 @@ export function PaymentsSection({
       return
     }
 
+    const input = { amountPaise, paidOn, method, reference, tdsPaise, feesPaise }
     startTransition(async () => {
-      const result = await recordPayment(invoiceId, {
-        amountPaise,
-        paidOn,
-        method,
-        reference,
-        tdsPaise,
-        feesPaise,
-      })
+      const result = editingId
+        ? await updatePayment(editingId, invoiceId, input)
+        : await recordPayment(invoiceId, input)
       if (result.error) {
         setError(result.error)
       } else {
@@ -130,7 +145,9 @@ export function PaymentsSection({
           {payments.map((p) => (
             <div
               key={p.id}
-              className="flex items-center gap-4 border-b border-neutral-100 py-2.5 text-[13px]"
+              className={`flex items-center gap-4 border-b border-neutral-100 py-2.5 text-[13px] ${
+                editingId === p.id ? 'bg-neutral-50' : ''
+              }`}
             >
               <span className="w-24 text-neutral-500">{p.paid_on}</span>
               <span className="w-28 font-medium tabular-nums text-neutral-900">
@@ -145,6 +162,14 @@ export function PaymentsSection({
                   TDS {formatPaise(p.tds_paise, { currency })}
                 </span>
               ) : null}
+              <button
+                type="button"
+                onClick={() => startEditing(p)}
+                disabled={pending}
+                className="text-[11px] uppercase tracking-[0.1em] text-neutral-400 hover:text-neutral-900 hover:underline disabled:opacity-30"
+              >
+                Edit
+              </button>
               <button
                 type="button"
                 onClick={() => handleDelete(p.id)}
@@ -223,11 +248,21 @@ export function PaymentsSection({
         <Button
           type="button"
           disabled={pending}
-          onClick={handleAdd}
+          onClick={handleSubmit}
           className="h-auto rounded-none bg-neutral-900 px-5 py-2.5 text-[12px] uppercase tracking-[0.1em] text-white hover:bg-neutral-900/90 disabled:opacity-50"
         >
-          {pending ? 'Saving…' : 'Add payment'}
+          {pending ? 'Saving…' : editingId ? 'Save payment' : 'Add payment'}
         </Button>
+        {editingId ? (
+          <button
+            type="button"
+            onClick={resetForm}
+            disabled={pending}
+            className="text-[11px] uppercase tracking-[0.1em] text-neutral-400 hover:text-neutral-900 hover:underline disabled:opacity-30"
+          >
+            Cancel edit
+          </button>
+        ) : null}
       </div>
       {error ? (
         <p role="alert" className="text-[13px] text-red-700">

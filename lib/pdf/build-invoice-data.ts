@@ -1,5 +1,6 @@
 import { formatPaise, numberToIndianWords } from '@/lib/money'
 import type { GstTreatment } from '@/lib/tax'
+import { buildUpiLink } from '@/lib/upi'
 
 import type { InvoiceLineRow, InvoiceTemplateData } from './types'
 
@@ -32,6 +33,7 @@ export type BuildInvoiceDataInput = {
   placeOfSupply: string
   gstTreatment: GstTreatment
   currency: string
+  notes: string
   supplier: {
     name: string
     addressLines: string[]
@@ -98,6 +100,7 @@ export function buildInvoiceData(input: BuildInvoiceDataInput): {
     dueDate: formatDate(input.dueDate),
     placeOfSupply: input.placeOfSupply,
     gstTreatment: input.gstTreatment,
+    notes: input.notes.trim(),
     supplier: input.supplier,
     billTo: {
       name: input.billTo.name,
@@ -105,7 +108,16 @@ export function buildInvoiceData(input: BuildInvoiceDataInput): {
       gstin: input.billTo.gstin,
       stateLabel,
     },
-    payment: input.payment,
+    payment: {
+      ...input.payment,
+      upiLink: buildUpiLink({
+        upiId: input.payment.upiId,
+        payeeName: input.supplier.name,
+        currency,
+        amountPaise: input.totals.totalPaise,
+        invoiceNumber: input.invoiceNumber,
+      }),
+    },
     rows,
     totals: {
       items: `${rows.length} ${rows.length === 1 ? 'item' : 'items'}`,

@@ -35,9 +35,21 @@ export default async function AppLayout({
     redirect('/login')
   }
 
+  // The brand slot shows the business, not the app: "Invoices" sat directly
+  // beside an "Invoices" nav link, which read as a duplicate rather than a
+  // wordmark.
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('legal_name, trade_name')
+    .eq('user_id', user.id)
+    .maybeSingle()
+
   return (
     <div className="min-h-dvh bg-white">
-      <AppNav email={user.email} />
+      <AppNav
+        email={user.email}
+        brand={profile?.trade_name || profile?.legal_name || 'Invoices'}
+      />
       <main className="mx-auto w-full max-w-4xl px-6 py-12">{children}</main>
     </div>
   )

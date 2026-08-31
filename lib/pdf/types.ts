@@ -51,12 +51,19 @@ export type InvoiceTemplateData = {
     gstin: string
     stateLabel: string
   }
+  // Free text the user typed on this invoice (seeded from
+  // profiles.notes_default). Empty string when there's nothing to print —
+  // templates skip the block entirely rather than leaving a bare heading.
+  notes: string
   payment: {
     bankName: string
     accountNo: string
     ifsc: string
     upiId: string
     termsLabel: string
+    // null whenever there's nothing to link to — no UPI id on file, a
+    // foreign-currency invoice, or nothing owed. See lib/upi.ts.
+    upiLink: string | null
   }
   rows: InvoiceLineRow[]
   totals: InvoiceTotals

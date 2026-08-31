@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   Table,
@@ -11,10 +10,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { computeDisplayStatus, wasPaidLate } from '@/lib/invoice-status'
 import { formatPaise } from '@/lib/money'
 import { createClient } from '@/lib/supabase/server'
 
-import { DeleteInvoiceButton } from './delete-button'
+import { StatusSelect } from './status-select'
 
 export const metadata: Metadata = {
   title: 'Invoices',
@@ -22,11 +22,36 @@ export const metadata: Metadata = {
 
 export default async function InvoicesPage() {
   const supabase = await createClient()
-  const { data: invoices } = await supabase
-    .from('invoices')
-    .select('id, number, status, bill_to_name, total_paise, currency, issue_date, kind')
-    .eq('kind', 'invoice')
-    .order('created_at', { ascending: false })
+  const [{ data: invoices }, { data: balances }, { data: payments }] = await Promise.all([
+    supabase
+      .from('invoices')
+      .select('id, number, status, bill_to_name, total_paise, currency, issue_date, kind, fy')
+      .eq('kind', 'invoice')
+      .order('created_at', { ascending: false }),
+    supabase.from('invoice_balances').select('id, is_overdue, due_date'),
+    supabase.from('payments').select('invoice_id, paid_on'),
+  ])
+
+  // Only financial years that actually have sent invoices — drafts carry a
+  // uuid placeholder in `fy` until they're numbered, which must never show
+  // up as a year to export.
+  const financialYears = [
+    ...new Set(
+      (invoices ?? [])
+        .filter((i) => i.status !== 'draft')
+        .map((i) => i.fy)
+        .filter((fy): fy is string => /^\d{4}-\d{2}$/.test(fy)),
+    ),
+  ].sort((a, b) => b.localeCompare(a))
+
+  const overdueById = new Map(balances?.map((b) => [b.id, b.is_overdue ?? false]) ?? [])
+  const dueDateById = new Map(balances?.map((b) => [b.id, b.due_date]) ?? [])
+  const paymentDatesByInvoiceId = new Map<string, string[]>()
+  for (const p of payments ?? []) {
+    const dates = paymentDatesByInvoiceId.get(p.invoice_id) ?? []
+    dates.push(p.paid_on)
+    paymentDatesByInvoiceId.set(p.invoice_id, dates)
+  }
 
   return (
     <div className="mx-auto w-full max-w-4xl">
@@ -62,57 +87,85 @@ export default async function InvoicesPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {invoices.map((inv) => (
-              <TableRow key={inv.id} className="border-neutral-200 hover:bg-neutral-50">
-                <TableCell className="px-0 py-4">
-                  <Link
-                    href={`/invoices/${inv.id}/edit`}
-                    className="text-[14px] text-neutral-900 hover:underline"
-                  >
-                    {inv.bill_to_name}
-                  </Link>
-                </TableCell>
-                <TableCell className="px-0 py-4 text-[13px] text-neutral-500">
-                  {new Date(inv.issue_date).toLocaleDateString('en-IN', {
-                    day: '2-digit',
-                    month: 'short',
-                    year: 'numeric',
-                  })}
-                </TableCell>
-                <TableCell className="px-0 py-4">
-                  <Badge
-                    variant="outline"
-                    className="h-auto rounded-none px-1.5 py-0.5 text-[10px] uppercase tracking-[0.1em] text-neutral-500"
-                  >
-                    {inv.status.replace('_', ' ')}
-                  </Badge>
-                </TableCell>
-                <TableCell className="px-0 py-4 text-right text-[13px] tabular-nums text-neutral-900">
-                  {formatPaise(inv.total_paise, {
-                    showPaise: false,
-                    currency: inv.currency,
-                  })}
-                </TableCell>
-                <TableCell className="px-0 py-4 text-right">
-                  <div className="flex items-center justify-end gap-4">
+            {invoices.map((inv) => {
+              const displayStatus = computeDisplayStatus({
+                status: inv.status,
+                isOverdue: overdueById.get(inv.id) ?? false,
+                paidLate: wasPaidLate(
+                  paymentDatesByInvoiceId.get(inv.id) ?? [],
+                  dueDateById.get(inv.id) ?? null,
+                ),
+              })
+
+              return (
+                <TableRow key={inv.id} className="border-neutral-200 hover:bg-neutral-50">
+                  <TableCell className="px-0 py-4">
+                    <Link
+                      href={`/invoices/${inv.id}/edit`}
+                      className="text-[14px] text-neutral-900 hover:underline"
+                    >
+                      {inv.bill_to_name}
+                    </Link>
+                  </TableCell>
+                  <TableCell className="px-0 py-4 text-[13px] text-neutral-500">
+                    {new Date(inv.issue_date).toLocaleDateString('en-IN', {
+                      day: '2-digit',
+                      month: 'short',
+                      year: 'numeric',
+                    })}
+                  </TableCell>
+                  <TableCell className="px-0 py-4">
+                    <StatusSelect
+                      invoiceId={inv.id}
+                      status={inv.status}
+                      displayStatus={displayStatus}
+                    />
+                  </TableCell>
+                  <TableCell className="px-0 py-4 text-right text-[13px] tabular-nums text-neutral-900">
+                    {formatPaise(inv.total_paise, {
+                      showPaise: false,
+                      currency: inv.currency,
+                    })}
+                  </TableCell>
+                  <TableCell className="px-0 py-4 text-right">
                     <Link
                       href={`/invoices/${inv.id}/edit`}
                       className="text-[11px] uppercase tracking-[0.1em] text-neutral-500 hover:text-neutral-900 hover:underline"
                     >
                       Edit
                     </Link>
-                    {inv.status === 'draft' ? (
-                      <DeleteInvoiceButton invoiceId={inv.id} />
-                    ) : null}
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
+                  </TableCell>
+                </TableRow>
+              )
+            })}
           </TableBody>
         </Table>
       ) : (
         <p className="mt-10 text-[13px] text-neutral-500">No invoices yet.</p>
       )}
+
+      {financialYears.length > 0 ? (
+        <div className="mt-10 flex flex-wrap items-baseline gap-x-4 gap-y-2 border-t border-neutral-200 pt-6">
+          <span className="text-[11px] uppercase tracking-[0.1em] text-neutral-400">
+            Export for your CA
+          </span>
+          {financialYears.map((fy) => (
+            <a
+              key={fy}
+              href={`/api/export/invoices?fy=${fy}`}
+              className="text-[12px] tabular-nums text-neutral-500 underline-offset-4 hover:text-neutral-900 hover:underline"
+            >
+              FY {fy}
+            </a>
+          ))}
+          <a
+            href="/api/export/invoices"
+            className="text-[12px] text-neutral-500 underline-offset-4 hover:text-neutral-900 hover:underline"
+          >
+            All
+          </a>
+        </div>
+      ) : null}
     </div>
   )
 }

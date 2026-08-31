@@ -295,6 +295,7 @@ export function InvoiceEditor({
       placeOfSupply: selectedClient?.state ?? '',
       gstTreatment,
       currency,
+      notes,
       supplier: {
         name: profile.tradeName || profile.legalName,
         addressLines: supplierAddressLines,
@@ -348,6 +349,7 @@ export function InvoiceEditor({
     selectedClient,
     gstTreatment,
     currency,
+    notes,
     issueDate,
     dueDate,
     terms,

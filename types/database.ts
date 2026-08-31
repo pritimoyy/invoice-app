@@ -496,6 +496,57 @@ export type Database = {
         }
         Relationships: []
       }
+      recurring_invoices: {
+        Row: {
+          cadence: Database["public"]["Enums"]["recurrence_cadence"]
+          created_at: string
+          id: string
+          is_active: boolean
+          last_generated_on: string | null
+          next_due_on: string
+          source_invoice_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cadence?: Database["public"]["Enums"]["recurrence_cadence"]
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          last_generated_on?: string | null
+          next_due_on: string
+          source_invoice_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cadence?: Database["public"]["Enums"]["recurrence_cadence"]
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          last_generated_on?: string | null
+          next_due_on?: string
+          source_invoice_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recurring_invoices_source_invoice_id_fkey"
+            columns: ["source_invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoice_balances"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recurring_invoices_source_invoice_id_fkey"
+            columns: ["source_invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       services: {
         Row: {
           created_at: string
@@ -576,6 +627,10 @@ export type Database = {
           seq: number
         }[]
       }
+      replace_invoice_items: {
+        Args: { p_invoice_id: string; p_items: Json }
+        Returns: undefined
+      }
     }
     Enums: {
       doc_kind: "invoice" | "estimate"
@@ -594,6 +649,12 @@ export type Database = {
         | "cash"
         | "cheque"
         | "other"
+      recurrence_cadence:
+        | "weekly"
+        | "fortnightly"
+        | "monthly"
+        | "quarterly"
+        | "yearly"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -741,6 +802,13 @@ export const Constants = {
         "cash",
         "cheque",
         "other",
+      ],
+      recurrence_cadence: [
+        "weekly",
+        "fortnightly",
+        "monthly",
+        "quarterly",
+        "yearly",
       ],
     },
   },

@@ -2,11 +2,11 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-import { Badge } from '@/components/ui/badge'
+import { computeDisplayStatus, wasPaidLate } from '@/lib/invoice-status'
 import { paiseToEditableString } from '@/lib/money'
 import { createClient } from '@/lib/supabase/server'
 
-import { DeleteInvoiceButton } from '../../delete-button'
+import { StatusSelect } from '../../status-select'
 import { InvoiceEditor } from './invoice-editor'
 import { PaymentsSection } from './payments-section'
 
@@ -60,12 +60,12 @@ export default async function EditInvoicePage({
       .order('name'),
     supabase
       .from('payments')
-      .select('id, amount_paise, paid_on, method, reference, tds_paise')
+      .select('id, amount_paise, paid_on, method, reference, tds_paise, fees_paise')
       .eq('invoice_id', id)
       .order('paid_on', { ascending: false }),
     supabase
       .from('invoice_balances')
-      .select('paid_paise, balance_paise, is_overdue')
+      .select('paid_paise, balance_paise, is_overdue, due_date')
       .eq('id', id)
       .maybeSingle(),
   ])
@@ -74,19 +74,43 @@ export default async function EditInvoicePage({
     notFound()
   }
 
+  const displayStatus = computeDisplayStatus({
+    status: invoice.status,
+    isOverdue: balance?.is_overdue ?? false,
+    paidLate: wasPaidLate((payments ?? []).map((p) => p.paid_on), balance?.due_date ?? null),
+  })
+
+  // One editor serves both kinds — an estimate is the same document with a
+  // different `kind`. What differs is downstream: nothing is owed on a
+  // quote, so no payments section, and there's no public pay-me link.
+  const isEstimate = invoice.kind === 'estimate'
+
+  // max-w-4xl, matching the sibling pages: the app layout's <main> is
+  // already max-w-4xl, so anything wider here is silently clamped and only
+  // reads as intent that never takes effect.
   return (
-    <div className="mx-auto w-full max-w-6xl">
+    <div className="mx-auto w-full max-w-4xl">
       <div className="mb-8 flex items-baseline justify-between gap-4">
         <div className="flex items-baseline gap-3">
           <h1 className="text-[22px] font-medium tracking-tight text-neutral-900">
             {invoice.bill_to_name}
           </h1>
-          <Badge
-            variant="outline"
-            className="h-auto rounded-none px-1.5 py-0.5 text-[10px] uppercase tracking-[0.1em] text-neutral-500"
-          >
-            {invoice.status.replace('_', ' ')}
-          </Badge>
+          <StatusSelect
+            invoiceId={invoice.id}
+            status={invoice.status}
+            displayStatus={displayStatus}
+            allowSend={false}
+          />
+          {invoice.sent_at ? (
+            <span className="text-[11px] text-neutral-400">
+              Sent{' '}
+              {new Date(invoice.sent_at).toLocaleDateString('en-IN', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+              })}
+            </span>
+          ) : null}
         </div>
         <div className="flex items-baseline gap-5">
           <a
@@ -97,7 +121,7 @@ export default async function EditInvoicePage({
           >
             Download PDF
           </a>
-          {invoice.status !== 'draft' ? (
+          {invoice.status !== 'draft' && !isEstimate ? (
             <a
               href={`/i/${invoice.public_token}`}
               target="_blank"
@@ -108,18 +132,11 @@ export default async function EditInvoicePage({
             </a>
           ) : null}
           <Link
-            href="/invoices"
+            href={isEstimate ? '/estimates' : '/invoices'}
             className="text-[11px] uppercase tracking-[0.12em] text-neutral-500 underline-offset-4 hover:text-neutral-900 hover:underline"
           >
-            Invoices
+            {isEstimate ? 'Estimates' : 'Invoices'}
           </Link>
-          {invoice.status === 'draft' ? (
-            <DeleteInvoiceButton
-              invoiceId={invoice.id}
-              label="Delete draft"
-              className="h-auto px-0 text-[11px] uppercase tracking-[0.12em] text-neutral-500 hover:bg-transparent hover:text-red-700 hover:underline"
-            />
-          ) : null}
         </div>
       </div>
 
@@ -167,7 +184,7 @@ export default async function EditInvoicePage({
         }}
       />
 
-      {invoice.status !== 'draft' ? (
+      {invoice.status !== 'draft' && !isEstimate ? (
         <PaymentsSection
           invoiceId={invoice.id}
           currency={invoice.currency}

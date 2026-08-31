@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
+import { formatPaise } from '@/lib/money'
 import { loadPublicInvoice } from '@/lib/pdf/load-public-invoice'
 import { archivo } from '@/lib/web-fonts'
 
@@ -169,6 +170,25 @@ export default async function PublicInvoicePage({
               <span className="text-[15px] font-bold">Total</span>
               <span className="text-[22px] font-extrabold tabular-nums">{data.totals.total}</span>
             </div>
+            {/* Only once something has actually been paid — on an untouched
+                invoice "Paid ₹0 / Balance ₹X" is noise that just restates
+                the total. */}
+            {invoice.paidPaise > 0 ? (
+              <div className="mt-2.5 border-t border-neutral-200 pt-2.5">
+                <div className="flex justify-between py-1">
+                  <span className="text-neutral-500">Paid to date</span>
+                  <span className="tabular-nums text-emerald-700">
+                    {formatPaise(invoice.paidPaise, { currency: invoice.currency })}
+                  </span>
+                </div>
+                <div className="flex justify-between py-1">
+                  <span className="font-semibold">Balance due</span>
+                  <span className="font-semibold tabular-nums">
+                    {formatPaise(invoice.balancePaise, { currency: invoice.currency })}
+                  </span>
+                </div>
+              </div>
+            ) : null}
           </div>
         </div>
 
@@ -193,8 +213,21 @@ export default async function PublicInvoicePage({
             <p className="mt-2 text-[13px] text-neutral-500">
               Terms: {data.payment.termsLabel}
             </p>
+            {data.notes !== '' ? (
+              <p className="mt-4 whitespace-pre-line text-[13px] leading-relaxed text-neutral-500">
+                {data.notes}
+              </p>
+            ) : null}
           </div>
-          <div className="flex items-start sm:justify-end">
+          <div className="flex flex-col items-start gap-3 sm:items-end">
+            {data.payment.upiLink ? (
+              <a
+                href={data.payment.upiLink}
+                className="bg-neutral-900 px-6 py-3 text-[13px] uppercase tracking-[0.12em] text-white hover:bg-neutral-900/90"
+              >
+                Pay via UPI
+              </a>
+            ) : null}
             <a
               href={`/i/${token}/pdf`}
               target="_blank"

@@ -1,4 +1,4 @@
-import { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
+import { Document, Link, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
 
 import { paginateRows, type PageCapacity } from '../paginate'
 import type { InvoiceLineRow, InvoiceTemplateData } from '../types'
@@ -52,6 +52,13 @@ const styles = StyleSheet.create({
   contDetail: { fontSize: 8.5, lineHeight: 1.6 },
   railSpacer: { flex: 1 },
   paymentTile: { gap: 4, alignItems: 'flex-start' },
+  upiLink: {
+    fontSize: 8.5,
+    fontWeight: 700,
+    color: '#ec3013',
+    textDecoration: 'none',
+  },
+  notes: { marginTop: 6, fontSize: 8, lineHeight: 1.6, opacity: 0.7 },
   main: { flex: 1, flexDirection: 'column', gap: 10 },
   itemsTile: {
     flex: 1,
@@ -260,6 +267,14 @@ export function InvoiceBentoII({
                   {'\n'}
                   IFSC {data.payment.ifsc}
                 </Text>
+                {data.payment.upiLink && (
+                  <Link src={data.payment.upiLink} style={styles.upiLink}>
+                    Pay via UPI
+                  </Link>
+                )}
+                {data.notes !== '' && (
+                  <Text style={styles.notes}>{data.notes}</Text>
+                )}
               </View>
             )}
           </View>

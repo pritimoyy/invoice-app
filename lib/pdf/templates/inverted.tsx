@@ -1,4 +1,4 @@
-import { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
+import { Document, Link, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
 
 import { paginateRows, type PageCapacity } from '../paginate'
 import type { InvoiceLineRow, InvoiceTemplateData } from '../types'
@@ -229,6 +229,13 @@ const styles = StyleSheet.create({
     letterSpacing: 0.72,
   },
   paymentLineValue: { fontWeight: 400 },
+  upiLink: {
+    color: '#ec3013',
+    fontWeight: 800,
+    letterSpacing: 0.72,
+    textDecoration: 'none',
+  },
+  notes: { marginTop: 10, fontSize: 8, lineHeight: 1.5, opacity: 0.65 },
   paymentTerms: {
     fontSize: 8,
     fontWeight: 600,
@@ -450,6 +457,14 @@ export function InvoiceInverted({
                         {data.payment.upiId}
                       </Text>
                     </View>
+                    {data.payment.upiLink && (
+                      <View style={styles.paymentLine}>
+                        <Text style={styles.paymentLineLabel} />
+                        <Link src={data.payment.upiLink} style={styles.upiLink}>
+                          PAY VIA UPI
+                        </Link>
+                      </View>
+                    )}
                   </View>
                   <Text style={styles.paymentTerms}>
                     TERMS: {data.payment.termsLabel.toUpperCase()}
@@ -462,6 +477,9 @@ export function InvoiceInverted({
                       {data.dueDate}
                     </Text>
                   </View>
+                  {data.notes !== '' && (
+                    <Text style={styles.notes}>{data.notes}</Text>
+                  )}
                 </View>
               </View>
             </View>

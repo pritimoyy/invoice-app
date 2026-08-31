@@ -3,13 +3,17 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
+import { isoDatePlusDays, todayIso } from '@/lib/dates'
+import { duplicateInvoiceAsDraft } from '@/lib/duplicate-invoice'
+import { buildInvoiceDataFromRow } from '@/lib/pdf/from-row'
+import { invoicePdfPath, renderInvoicePdf } from '@/lib/pdf/render'
 import { computeInvoiceTax, type GstTreatment } from '@/lib/tax'
 import {
   computeLineSubtotal,
   computeLineTotal,
   roundToNearestRupee,
 } from '@/lib/money'
-import { assignNextInvoiceNumber } from '@/lib/numbering'
+import { assignNextInvoiceNumber, type DocKind } from '@/lib/numbering'
 import { createClient } from '@/lib/supabase/server'
 
 export type DraftLineItemInput = {
@@ -78,6 +82,7 @@ export async function createDraftInvoice(formData: FormData) {
   if (!clientId) {
     throw new Error('A client is required to start an invoice.')
   }
+  const kind: DocKind = formData.get('kind') === 'estimate' ? 'estimate' : 'invoice'
 
   const supabase = await createClient()
   const {
@@ -98,11 +103,9 @@ export async function createDraftInvoice(formData: FormData) {
   }
 
   const id = crypto.randomUUID()
-  const issueDate = new Date().toISOString().slice(0, 10)
+  const issueDate = todayIso()
   const termsDays = profile?.default_terms_days ?? 15
-  const dueDate = new Date(Date.now() + termsDays * 24 * 60 * 60 * 1000)
-    .toISOString()
-    .slice(0, 10)
+  const dueDate = isoDatePlusDays(termsDays)
 
   const gstTreatment = suggestGstTreatment(
     profile?.is_gst_registered ?? false,
@@ -115,6 +118,7 @@ export async function createDraftInvoice(formData: FormData) {
     id,
     user_id: user.id,
     client_id: client.id,
+    kind,
     number: draftNumberPlaceholder(id),
     fy: id,
     seq: 0,
@@ -254,14 +258,6 @@ export async function saveDraftInvoice(
     return { error: invoiceError.message }
   }
 
-  const { error: deleteError } = await supabase
-    .from('invoice_items')
-    .delete()
-    .eq('invoice_id', invoiceId)
-  if (deleteError) {
-    return { error: deleteError.message }
-  }
-
   const rows = input.items.map((item, i) => ({
     user_id: user.id,
     invoice_id: invoiceId,
@@ -280,11 +276,16 @@ export async function saveDraftInvoice(
       taxResult.lineTax[i].igstPaise,
   }))
 
-  const { error: insertError } = await supabase
-    .from('invoice_items')
-    .insert(rows)
-  if (insertError) {
-    return { error: insertError.message }
+  // One RPC, not delete-then-insert: the function body is a single
+  // transaction, so an interruption can't leave the invoice with its
+  // totals intact but every line item gone. See the migration
+  // 20260831210000_replace_invoice_items_atomic.sql.
+  const { error: itemsError } = await supabase.rpc('replace_invoice_items', {
+    p_invoice_id: invoiceId,
+    p_items: rows,
+  })
+  if (itemsError) {
+    return { error: itemsError.message }
   }
 
   revalidatePath(`/invoices/${invoiceId}/edit`)
@@ -315,7 +316,11 @@ export async function sendInvoice(invoiceId: string): Promise<SendInvoiceState> 
   }
 
   const [{ data: invoice }, { data: profile }] = await Promise.all([
-    supabase.from('invoices').select('status, issue_date').eq('id', invoiceId).maybeSingle(),
+    supabase
+      .from('invoices')
+      .select('status, issue_date, total_paise, client_id, kind')
+      .eq('id', invoiceId)
+      .maybeSingle(),
     supabase.from('profiles').select('invoice_prefix').eq('user_id', user.id).maybeSingle(),
   ])
 
@@ -325,6 +330,11 @@ export async function sendInvoice(invoiceId: string): Promise<SendInvoiceState> 
   if (invoice.status !== 'draft') {
     return { error: 'This invoice has already been sent.' }
   }
+  if (!invoice.client_id || invoice.total_paise <= 0) {
+    return {
+      error: 'This draft has no client or line items yet — open it and fill it in before sending.',
+    }
+  }
 
   let numbering
   try {
@@ -333,6 +343,7 @@ export async function sendInvoice(invoiceId: string): Promise<SendInvoiceState> 
       user.id,
       invoice.issue_date,
       profile?.invoice_prefix ?? 'INV',
+      invoice.kind,
     )
   } catch (err) {
     return { error: err instanceof Error ? err.message : 'Could not assign an invoice number.' }
@@ -354,9 +365,142 @@ export async function sendInvoice(invoiceId: string): Promise<SendInvoiceState> 
     return { error: error.message }
   }
 
+  // Cache the rendered PDF now, at the moment the invoice is frozen. This
+  // is the point of caching here rather than on first download: a sent
+  // invoice must produce byte-identical output forever, and a stored file
+  // can't drift when a template is later restyled. A failure here is
+  // deliberately not fatal — the invoice is already sent and both PDF
+  // routes fall back to rendering on demand.
+  await cacheInvoicePdf(supabase, user.id, invoiceId)
+
   revalidatePath(`/invoices/${invoiceId}/edit`)
   revalidatePath('/invoices')
   return { error: null }
+}
+
+/**
+ * Renders an invoice and stores it in the private `invoices` bucket,
+ * recording the path on the row. Best-effort by design: callers treat a
+ * failure as "no cache yet", never as a failed send.
+ */
+async function cacheInvoicePdf(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  userId: string,
+  invoiceId: string,
+) {
+  try {
+    const [{ data: invoice }, { data: items }, { data: profile }] = await Promise.all([
+      supabase.from('invoices').select('*').eq('id', invoiceId).maybeSingle(),
+      supabase.from('invoice_items').select('*').eq('invoice_id', invoiceId).order('position'),
+      supabase.from('profiles').select('*').eq('user_id', userId).maybeSingle(),
+    ])
+    if (!invoice) return
+
+    const { data, rows } = buildInvoiceDataFromRow(invoice, items ?? [], profile)
+    const buffer = await renderInvoicePdf(data, rows, invoice.template)
+    const path = invoicePdfPath(userId, invoiceId)
+
+    const { error: uploadError } = await supabase.storage
+      .from('invoices')
+      .upload(path, buffer, { contentType: 'application/pdf', upsert: true })
+    if (uploadError) return
+
+    await supabase.from('invoices').update({ pdf_path: path }).eq('id', invoiceId)
+  } catch {
+    // Non-fatal: the send already succeeded, and the PDF routes render on
+    // demand when pdf_path is null.
+  }
+}
+
+/**
+ * Estimate -> invoice. Creates a *new* draft invoice rather than flipping
+ * the estimate's kind: the estimate keeps its own number and stays on
+ * record as the thing that was quoted, and `converted_from_id` links the
+ * two. The new invoice starts as a draft with no number, so it still goes
+ * through the normal send path and draws from the invoice counter.
+ *
+ * Totals are copied as stored rather than recomputed — the estimate's
+ * numbers are what was agreed, and re-deriving them here could silently
+ * differ if a tax rate or client address changed since.
+ */
+export async function convertEstimateToInvoice(estimateId: string) {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) {
+    redirect('/login')
+  }
+
+  const { data: estimate } = await supabase
+    .from('invoices')
+    .select('kind')
+    .eq('id', estimateId)
+    .maybeSingle()
+
+  if (!estimate) {
+    throw new Error('Estimate not found.')
+  }
+  if (estimate.kind !== 'estimate') {
+    throw new Error('Only an estimate can be converted to an invoice.')
+  }
+
+  const result = await duplicateInvoiceAsDraft(supabase, user.id, estimateId, {
+    kind: 'invoice',
+    convertedFromId: estimateId,
+  })
+  if ('error' in result) {
+    throw new Error(result.error)
+  }
+
+  revalidatePath('/estimates')
+  revalidatePath('/invoices')
+  redirect(`/invoices/${result.id}/edit`)
+}
+
+/**
+ * Voids a sent invoice without deleting it — once a real number has gone
+ * out, the record has to stay (that's the whole point of sequential
+ * numbering) even if the invoice itself falls through. Not offered for
+ * 'paid': money has already changed hands, so "cancel" isn't the right
+ * operation there. invoice_balances already excludes cancelled rows from
+ * every outstanding/overdue total, so this is enough on its own to stop
+ * it counting anywhere.
+ */
+export async function cancelInvoice(invoiceId: string) {
+  const supabase = await createClient()
+
+  // No explicit auth.getUser() + redirect() here on purpose: CancelInvoiceButton
+  // awaits this inside a try/catch, and redirect() works by throwing —
+  // wrapping it in try/catch would intercept that throw and surface it as
+  // a raw error instead of letting the redirect happen. RLS already
+  // scopes every row to its owner, so an unauthenticated or mismatched
+  // call just finds nothing and falls into the "not found" branch below,
+  // same as setClientArchived/setServiceArchived already do.
+  const { data: invoice } = await supabase
+    .from('invoices')
+    .select('status')
+    .eq('id', invoiceId)
+    .maybeSingle()
+  if (!invoice) {
+    throw new Error('Invoice not found.')
+  }
+  if (invoice.status !== 'sent' && invoice.status !== 'partially_paid') {
+    throw new Error('Only a sent or partially paid invoice can be cancelled.')
+  }
+
+  const { error } = await supabase
+    .from('invoices')
+    .update({ status: 'cancelled' })
+    .eq('id', invoiceId)
+    .in('status', ['sent', 'partially_paid'])
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  revalidatePath('/invoices')
+  revalidatePath(`/invoices/${invoiceId}/edit`)
 }
 
 /**

@@ -3,6 +3,19 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import type { Database } from '@/types/database'
 
 export type InvoiceStatus = Database['public']['Enums']['invoice_status']
+export type DocKind = Database['public']['Enums']['doc_kind']
+
+/**
+ * Estimates ignore the user's invoice_prefix and always print as EST.
+ *
+ * next_invoice_number() keeps a separate counter per (fy, kind), so an
+ * estimate and an invoice in the same year both start at seq 1 — sharing
+ * a prefix would produce the identical string twice and trip the
+ * (user_id, number) uniqueness constraint. A fixed 3-char prefix also
+ * keeps the result at 14 characters regardless of how long the user's own
+ * prefix is, comfortably inside the 16-char invoices_number_len check.
+ */
+const ESTIMATE_PREFIX = 'EST'
 
 /**
  * next_invoice_number() (supabase/migrations/20260830120000_invoice_schema.sql)
@@ -34,14 +47,20 @@ export async function assignNextInvoiceNumber(
   userId: string,
   issueDate: string,
   prefix: string,
+  kind: DocKind = 'invoice',
 ): Promise<{ number: string; fy: string; seq: number }> {
   const { data, error } = await supabase
-    .rpc('next_invoice_number', { p_user_id: userId, p_date: issueDate })
+    .rpc('next_invoice_number', { p_user_id: userId, p_date: issueDate, p_kind: kind })
     .single()
 
   if (error || !data) {
     throw new Error(error?.message ?? 'Could not assign an invoice number.')
   }
 
-  return { number: formatInvoiceNumber(prefix, data.fy, data.seq), fy: data.fy, seq: data.seq }
+  const effectivePrefix = kind === 'estimate' ? ESTIMATE_PREFIX : prefix
+  return {
+    number: formatInvoiceNumber(effectivePrefix, data.fy, data.seq),
+    fy: data.fy,
+    seq: data.seq,
+  }
 }
