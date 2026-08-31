@@ -243,25 +243,38 @@
     box-shadow: var(--elevation-1);
   }
 
-  /* Hero cards — the saturated gradient tiles. Text is forced white
-     because these sit on colour in both themes. */
-  .app-card-gradient {
+  /* Tinted cards — a stat worth noticing, without shouting.
+     A saturated fill turned out to be too much: it flattened the type onto
+     a colour field and, across four tiles, read as decoration rather than
+     emphasis. This keeps the card on the normal surface and applies the
+     accent as a faint top-to-bottom wash plus a coloured edge, so the
+     figure inside stays the loudest thing.
+
+     One rule, and each variant only sets --tint. color-mix against
+     --surface means the same percentages work in both themes: on white it
+     tints down, on near-black it tints up. */
+  .app-card-tint {
+    --tint: var(--primary);
     border-radius: var(--radius-xl);
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    box-shadow: var(--elevation-2);
+    border: 1px solid color-mix(in srgb, var(--tint) 42%, transparent);
+    background-image: linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--tint) 13%, var(--surface)) 0%,
+      color-mix(in srgb, var(--tint) 4%, var(--surface)) 100%
+    );
+    box-shadow: var(--elevation-1);
   }
-  .grad-blue {
-    background-image: var(--gradient-blue);
+  .tint-blue {
+    --tint: var(--primary);
   }
-  .grad-violet {
-    background-image: var(--gradient-violet);
+  .tint-violet {
+    --tint: var(--chart-2);
   }
-  .grad-mint {
-    background-image: var(--gradient-mint);
+  .tint-mint {
+    --tint: var(--success);
   }
-  .grad-sunset {
-    background-image: var(--gradient-sunset);
+  .tint-sunset {
+    --tint: var(--warning);
   }
 
   /* The translucent bar treatment from the references' headers and tab

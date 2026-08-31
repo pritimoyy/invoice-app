@@ -47,43 +47,23 @@ function StatCard({
   // outstanding." across a vivid blue card inverts the hierarchy — the
   // loudest thing on the page ends up carrying the least information — so
   // an empty stat falls back to a plain card.
-  const isGradient = Boolean(gradient) && amounts.size > 0
+  const isTinted = Boolean(gradient) && amounts.size > 0
   return (
-    <div
-      className={
-        isGradient
-          ? `app-card-gradient grad-${gradient} p-5`
-          : 'app-card p-5'
-      }
-    >
-      <p
-        className={`text-[14px] font-medium ${
-          isGradient ? 'text-white/80' : 'text-muted-foreground'
-        }`}
-      >
-        {label}
-      </p>
+    <div className={isTinted ? `app-card-tint tint-${gradient} p-5` : 'app-card p-5'}>
+      <p className="text-[14px] font-medium text-muted-foreground">{label}</p>
       {amounts.size > 0 ? (
         <div className="mt-2 flex flex-col gap-0.5">
           {[...amounts.entries()].map(([currency, paise]) => (
             <p
               key={currency}
-              className={`text-[28px] font-semibold tracking-[-0.02em] tabular-nums ${
-                isGradient ? 'text-white' : valueClassName
-              }`}
+              className={`text-[28px] font-semibold tracking-[-0.02em] tabular-nums ${valueClassName}`}
             >
               {formatPaise(paise, { currency, showPaise: false })}
             </p>
           ))}
         </div>
       ) : (
-        <p
-          className={`mt-2 text-[15px] ${
-            isGradient ? 'text-white/75' : 'text-muted-foreground'
-          }`}
-        >
-          {emptyText}
-        </p>
+        <p className="mt-2 text-[15px] text-muted-foreground">{emptyText}</p>
       )}
     </div>
   )
@@ -209,6 +189,7 @@ export default async function DashboardPage() {
           amounts={outstandingByCurrency}
           emptyText="Nothing outstanding."
           gradient="blue"
+          valueClassName="text-primary"
         />
         <StatCard
           label="Overdue"
