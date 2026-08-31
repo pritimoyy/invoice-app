@@ -59,16 +59,16 @@ export default async function EstimatesPage() {
           <Table>
           <TableHeader>
             <TableRow className="border-hairline hover:bg-transparent">
-              <TableHead className="h-11 px-4 text-[12px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-[13px] font-medium text-muted-foreground">
                 Client
               </TableHead>
-              <TableHead className="h-11 px-4 text-[12px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-[13px] font-medium text-muted-foreground">
                 Date
               </TableHead>
-              <TableHead className="h-11 px-4 text-[12px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-[13px] font-medium text-muted-foreground">
                 Status
               </TableHead>
-              <TableHead className="h-11 px-4 text-right text-[12px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-right text-[13px] font-medium text-muted-foreground">
                 Total
               </TableHead>
               <TableHead className="h-11 px-4" />
@@ -82,7 +82,7 @@ export default async function EstimatesPage() {
                   <TableCell className="px-4 py-3.5">
                     <Link
                       href={`/invoices/${est.id}/edit`}
-                      className="text-[14px] text-foreground hover:underline"
+                      className="text-[15px] text-foreground hover:underline"
                     >
                       {est.bill_to_name}
                     </Link>

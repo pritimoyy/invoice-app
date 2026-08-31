@@ -53,7 +53,7 @@ export function FormField({
         disabled={disabled}
         className={fieldClass}
       />
-      {hint ? <p className="text-[12px] text-muted-foreground">{hint}</p> : null}
+      {hint ? <p className="text-[13px] text-muted-foreground">{hint}</p> : null}
     </div>
   )
 }
@@ -136,7 +136,7 @@ export function FormSelect({
           </option>
         ))}
       </select>
-      {hint ? <p className="text-[12px] text-muted-foreground">{hint}</p> : null}
+      {hint ? <p className="text-[13px] text-muted-foreground">{hint}</p> : null}
     </div>
   )
 }

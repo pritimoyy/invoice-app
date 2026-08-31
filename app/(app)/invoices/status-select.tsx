@@ -48,7 +48,7 @@ const PAID_PREFIX = 'paid:'
 
 const selectClass =
   'h-7 w-fit cursor-pointer appearance-none rounded-full border border-hairline bg-secondary ' +
-  'py-0 pl-3 pr-7 text-[12px] font-medium outline-none transition-colors ' +
+  'py-0 pl-3 pr-7 text-[13px] font-medium outline-none transition-colors ' +
   'hover:bg-accent focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/40 ' +
   'disabled:cursor-not-allowed disabled:opacity-60'
 

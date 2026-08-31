@@ -64,7 +64,7 @@ function StatCard({
           {[...amounts.entries()].map(([currency, paise]) => (
             <p
               key={currency}
-              className={`text-[26px] font-semibold tracking-[-0.02em] tabular-nums ${
+              className={`text-[28px] font-semibold tracking-[-0.02em] tabular-nums ${
                 isGradient ? 'text-white' : valueClassName
               }`}
             >

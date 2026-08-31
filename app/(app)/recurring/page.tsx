@@ -73,16 +73,16 @@ export default async function RecurringPage() {
           <Table>
           <TableHeader>
             <TableRow className="border-hairline hover:bg-transparent">
-              <TableHead className="h-11 px-4 text-[12px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-[13px] font-medium text-muted-foreground">
                 Repeats
               </TableHead>
-              <TableHead className="h-11 px-4 text-[12px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-[13px] font-medium text-muted-foreground">
                 Every
               </TableHead>
-              <TableHead className="h-11 px-4 text-[12px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-[13px] font-medium text-muted-foreground">
                 Next
               </TableHead>
-              <TableHead className="h-11 px-4 text-right text-[12px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-right text-[13px] font-medium text-muted-foreground">
                 Amount
               </TableHead>
               <TableHead className="h-11 px-4" />
@@ -97,7 +97,7 @@ export default async function RecurringPage() {
                   <TableCell className="px-4 py-3.5">
                     <Link
                       href={`/invoices/${s.source_invoice_id}/edit`}
-                      className="text-[14px] text-foreground hover:underline"
+                      className="text-[15px] text-foreground hover:underline"
                     >
                       {source?.bill_to_name ?? '—'}
                     </Link>

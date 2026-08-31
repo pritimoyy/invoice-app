@@ -225,7 +225,7 @@ export function SettingsForm({
                 alt="Current logo"
                 className="h-12 w-auto max-w-[180px] object-contain"
               />
-              <span className="text-[12px] text-muted-foreground">
+              <span className="text-[13px] text-muted-foreground">
                 Current logo
               </span>
             </div>
@@ -245,7 +245,7 @@ export function SettingsForm({
               disabled={pending}
               className="text-[13px] text-muted-foreground file:mr-4 file:border file:border-border file:bg-transparent file:px-3 file:py-1.5 file:text-[11px] file:uppercase file:tracking-[0.12em] file:text-foreground"
             />
-            <p className="text-[12px] text-muted-foreground">
+            <p className="text-[13px] text-muted-foreground">
               PNG or JPEG, under 2 MB. Those are the formats the PDF renderer
               can embed.
             </p>

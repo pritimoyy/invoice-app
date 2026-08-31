@@ -71,16 +71,16 @@ export default async function InvoicesPage() {
           <Table>
           <TableHeader>
             <TableRow className="border-hairline hover:bg-transparent">
-              <TableHead className="h-11 px-4 text-[12px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-[13px] font-medium text-muted-foreground">
                 Client
               </TableHead>
-              <TableHead className="h-11 px-4 text-[12px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-[13px] font-medium text-muted-foreground">
                 Date
               </TableHead>
-              <TableHead className="h-11 px-4 text-[12px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-[13px] font-medium text-muted-foreground">
                 Status
               </TableHead>
-              <TableHead className="h-11 px-4 text-right text-[12px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-right text-[13px] font-medium text-muted-foreground">
                 Total
               </TableHead>
               <TableHead className="h-11 px-4" />
@@ -102,7 +102,7 @@ export default async function InvoicesPage() {
                   <TableCell className="px-4 py-3.5">
                     <Link
                       href={`/invoices/${inv.id}/edit`}
-                      className="text-[14px] text-foreground hover:underline"
+                      className="text-[15px] text-foreground hover:underline"
                     >
                       {inv.bill_to_name}
                     </Link>
@@ -154,14 +154,14 @@ export default async function InvoicesPage() {
             <a
               key={fy}
               href={`/api/export/invoices?fy=${fy}`}
-              className="text-[12px] tabular-nums text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+              className="text-[13px] tabular-nums text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
             >
               FY {fy}
             </a>
           ))}
           <a
             href="/api/export/invoices"
-            className="text-[12px] text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+            className="text-[13px] text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             All
           </a>

@@ -88,7 +88,7 @@ function parseExchangeRate(input: string): number | null {
 }
 
 const toolbarFieldClass =
-  'h-10 rounded-xl border border-transparent bg-secondary px-3 text-[14px] ' +
+  'h-10 rounded-xl border border-transparent bg-secondary px-3 text-[15px] ' +
   'text-foreground outline-none transition-colors focus-visible:border-ring ' +
   'focus-visible:ring-[3px] focus-visible:ring-ring/40 ' +
   'disabled:cursor-not-allowed disabled:opacity-50'

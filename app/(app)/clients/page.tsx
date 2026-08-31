@@ -51,13 +51,13 @@ export default async function ClientsPage({
           <Table>
           <TableHeader>
             <TableRow className="border-hairline hover:bg-transparent">
-              <TableHead className="h-11 px-4 text-[12px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-[13px] font-medium text-muted-foreground">
                 Name
               </TableHead>
-              <TableHead className="h-11 px-4 text-[12px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-[13px] font-medium text-muted-foreground">
                 Location
               </TableHead>
-              <TableHead className="h-11 px-4 text-[12px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-[13px] font-medium text-muted-foreground">
                 GSTIN
               </TableHead>
               <TableHead className="h-11 px-4" />
@@ -69,7 +69,7 @@ export default async function ClientsPage({
                 <TableCell className="px-4 py-3.5">
                   <Link
                     href={`/clients/${c.id}`}
-                    className="text-[14px] text-foreground hover:underline"
+                    className="text-[15px] text-foreground hover:underline"
                   >
                     {c.name}
                   </Link>
@@ -113,7 +113,7 @@ export default async function ClientsPage({
         </p>
       )}
 
-      <p className="mt-8 text-[12px] text-muted-foreground">
+      <p className="mt-8 text-[13px] text-muted-foreground">
         {showArchived ? (
           <Link href="/clients" className="underline-offset-4 hover:underline">
             Back to active clients

@@ -53,16 +53,16 @@ export default async function ServicesPage({
           <Table>
           <TableHeader>
             <TableRow className="border-hairline hover:bg-transparent">
-              <TableHead className="h-11 px-4 text-[12px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-[13px] font-medium text-muted-foreground">
                 Name
               </TableHead>
-              <TableHead className="h-11 px-4 text-[12px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-[13px] font-medium text-muted-foreground">
                 Unit
               </TableHead>
-              <TableHead className="h-11 px-4 text-right text-[12px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-right text-[13px] font-medium text-muted-foreground">
                 Rate
               </TableHead>
-              <TableHead className="h-11 px-4 text-right text-[12px] font-medium text-muted-foreground">
+              <TableHead className="h-11 px-4 text-right text-[13px] font-medium text-muted-foreground">
                 Tax
               </TableHead>
               <TableHead className="h-11 px-4" />
@@ -74,7 +74,7 @@ export default async function ServicesPage({
                 <TableCell className="px-4 py-3.5">
                   <Link
                     href={`/services/${s.id}`}
-                    className="text-[14px] text-foreground hover:underline"
+                    className="text-[15px] text-foreground hover:underline"
                   >
                     {s.name}
                   </Link>
@@ -121,7 +121,7 @@ export default async function ServicesPage({
         </p>
       )}
 
-      <p className="mt-8 text-[12px] text-muted-foreground">
+      <p className="mt-8 text-[13px] text-muted-foreground">
         {showArchived ? (
           <Link href="/services" className="underline-offset-4 hover:underline">
             Back to active services

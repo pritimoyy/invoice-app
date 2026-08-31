@@ -10,12 +10,13 @@ import { TAX_RATE_OPTIONS, type GstTreatment, type TaxLines } from '@/lib/tax'
  * templates the invoice will actually export as (that's the "Template"
  * toolbar select — a separate, later decision about output styling).
  * Editing shouldn't change look depending on that choice; this is its own
- * considered design, not a mirror of any one PDF template, built in the
- * app's own established visual language (neutral palette, sharp corners,
- * underline inputs, uppercase tracked micro-labels — components/invoice/
- * form-field.tsx's language) rather than the templates' dark/bento
- * treatments, with Archivo for the document body to give it its own
- * character against the rest of the app's Geist-based chrome.
+ * considered design, not a mirror of any one PDF template. It follows the
+ * app's design tokens so it themes with everything else, but keeps Archivo
+ * for the document body — that's what gives the editing surface the feel of
+ * a document rather than another form.
+ *
+ * Fields are invisible until hovered or focused: this reads as a document
+ * you can type into, not a form pretending to be one.
  */
 
 export type InitialLineItemLike = {
@@ -158,7 +159,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
           <select
             value={clientId}
             onChange={(e) => onClientChange(e.target.value)}
-            className={`${fieldClass} w-full pb-1.5 text-[16px] font-bold tracking-tight`}
+            className={`${fieldClass} w-full pb-1.5 text-[17px] font-bold tracking-tight`}
           >
             {clients.map((c) => (
               <option key={c.id} value={c.id}>
@@ -166,7 +167,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
               </option>
             ))}
           </select>
-          <p className="text-[14px] leading-relaxed text-muted-foreground">
+          <p className="text-[15px] leading-relaxed text-muted-foreground">
             {data.billTo.addressLines.join(', ') || '—'}
             {data.billTo.gstin ? (
               <>
@@ -179,7 +180,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
 
         <div className="flex flex-col gap-1.5">
           <p className={microLabel}>Dates</p>
-          <p className="text-[14px] leading-relaxed text-foreground">
+          <p className="text-[15px] leading-relaxed text-foreground">
             Issued{' '}
             <input
               type="date"
@@ -205,8 +206,8 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
 
         <div className="flex flex-col gap-1.5">
           <p className={microLabel}>From</p>
-          <p className="text-[16px] font-bold tracking-tight">{data.supplier.name || '—'}</p>
-          <p className="text-[14px] leading-relaxed text-muted-foreground">
+          <p className="text-[17px] font-bold tracking-tight">{data.supplier.name || '—'}</p>
+          <p className="text-[15px] leading-relaxed text-muted-foreground">
             {data.supplier.addressLines.join(', ') || '—'}
             {data.supplier.gstin ? (
               <>
@@ -264,7 +265,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
                 <button
                   type="button"
                   onClick={() => addDescLine(item.key, item.description)}
-                  className="self-start text-[10px] uppercase tracking-[0.08em] text-muted-foreground hover:text-foreground hover:underline disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:no-underline disabled:hover:text-muted-foreground"
+                  className="self-start text-[11px] uppercase tracking-[0.08em] text-muted-foreground hover:text-foreground hover:underline disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:no-underline disabled:hover:text-muted-foreground"
                 >
                   + Video title
                 </button>
@@ -290,7 +291,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
               <div className="w-32 pt-0.5 text-right font-semibold tabular-nums">
                 {formatPaise(lineSubtotals[i] ?? 0, { showPaise: false, currency })}
                 {taxPaise > 0 ? (
-                  <div className="text-[10px] font-normal text-muted-foreground">
+                  <div className="text-[11px] font-normal text-muted-foreground">
                     +{formatPaise(taxPaise, { showPaise: false, currency })} tax
                   </div>
                 ) : null}
@@ -299,7 +300,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
                 <select
                   value={item.taxRateBps}
                   onChange={(e) => onItemChange(item.key, { taxRateBps: Number(e.target.value) })}
-                  className={`${fieldClass} w-10 pb-1 text-[10px]`}
+                  className={`${fieldClass} w-10 pb-1 text-[11px]`}
                 >
                   {TAX_RATE_OPTIONS.map((r) => (
                     <option key={r.bps} value={r.bps}>
@@ -369,7 +370,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
           <p className={microLabel}>Total in words</p>
           <p className="text-[15px] font-semibold leading-snug">{data.totals.words || '—'}</p>
         </div>
-        <div className="w-full text-[14px] sm:w-80">
+        <div className="w-full text-[15px] sm:w-80">
           <div className="flex justify-between py-1.5">
             <span className="text-muted-foreground">Subtotal — {data.totals.items}</span>
             <span className="tabular-nums">{data.totals.subtotal}</span>
@@ -407,7 +408,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
           </div>
           <div className="mt-1.5 flex items-baseline justify-between border-t border-hairline pt-2.5">
             <span className="text-[15px] font-bold">Total</span>
-            <span className="text-[22px] font-extrabold tabular-nums">{data.totals.total}</span>
+            <span className="text-[22px] font-semibold tabular-nums">{data.totals.total}</span>
           </div>
         </div>
       </div>
@@ -415,7 +416,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
       <div className="grid grid-cols-1 gap-8 border-t border-border pt-6 sm:grid-cols-2">
         <div>
           <p className={microLabel}>Payment</p>
-          <p className="mt-1.5 text-[14px] leading-relaxed text-muted-foreground">
+          <p className="mt-1.5 text-[15px] leading-relaxed text-muted-foreground">
             {data.payment.upiId || '—'}
             {data.payment.bankName ? (
               <>
@@ -441,7 +442,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
             value={notes}
             onChange={(e) => onNotesChange(e.target.value)}
             placeholder="—"
-            className={`${fieldClass} w-full resize-y pb-1 text-[14px] leading-relaxed text-foreground`}
+            className={`${fieldClass} w-full resize-y pb-1 text-[15px] leading-relaxed text-foreground`}
           />
         </div>
       </div>
@@ -473,7 +474,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
               onChange={(e) => onExchangeRateChange(e.target.value)}
               placeholder="83.500000"
               inputMode="decimal"
-              className={`${fieldClass} w-36 pb-1 text-[14px] tabular-nums`}
+              className={`${fieldClass} w-36 pb-1 text-[15px] tabular-nums`}
             />
             <p className="text-[11px] text-muted-foreground">
               1 {currency} = this many rupees, printed for your accountant.
@@ -500,7 +501,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
           value={terms}
           onChange={(e) => onTermsChange(e.target.value)}
           placeholder={data.payment.termsLabel}
-          className={`${fieldClass} w-full resize-y pb-1 text-[14px] leading-relaxed text-foreground`}
+          className={`${fieldClass} w-full resize-y pb-1 text-[15px] leading-relaxed text-foreground`}
         />
         <p className="text-[11px] text-muted-foreground">
           Printed on the invoice if set, otherwise defaults to your standard terms.
@@ -517,7 +518,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
           value={internalMemo}
           onChange={(e) => onInternalMemoChange(e.target.value)}
           placeholder="Only you see this — chase notes, what was agreed on the call…"
-          className={`${fieldClass} w-full resize-y pb-1 text-[14px] leading-relaxed text-foreground`}
+          className={`${fieldClass} w-full resize-y pb-1 text-[15px] leading-relaxed text-foreground`}
         />
       </div>
     </div>

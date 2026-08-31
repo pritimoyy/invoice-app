@@ -36,7 +36,7 @@ export default async function PublicInvoicePage({
         className={`${archivo.className} app-card mx-auto flex w-full max-w-3xl flex-col gap-10 p-6 text-foreground sm:p-12`}
       >
         <div className="flex items-end justify-between gap-4 border-b border-hairline pb-5">
-          <h1 className="text-[40px] font-extrabold leading-[0.95] tracking-[-0.03em]">
+          <h1 className="text-[34px] font-bold leading-[1.05] tracking-[-0.03em]">
             Invoice
           </h1>
           <p className="text-right text-[13px] font-semibold tabular-nums text-muted-foreground">
@@ -47,8 +47,8 @@ export default async function PublicInvoicePage({
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
           <div className="flex flex-col gap-1.5">
             <p className={microLabel}>Billed to</p>
-            <p className="text-[16px] font-bold tracking-tight">{data.billTo.name}</p>
-            <p className="text-[14px] leading-relaxed text-muted-foreground">
+            <p className="text-[17px] font-bold tracking-tight">{data.billTo.name}</p>
+            <p className="text-[15px] leading-relaxed text-muted-foreground">
               {data.billTo.addressLines.join(', ') || '—'}
               {data.billTo.gstin ? (
                 <>
@@ -61,7 +61,7 @@ export default async function PublicInvoicePage({
 
           <div className="flex flex-col gap-1.5">
             <p className={microLabel}>Dates</p>
-            <p className="text-[14px] leading-relaxed text-foreground">
+            <p className="text-[15px] leading-relaxed text-foreground">
               Issued {data.issuedDate || '—'}
               <br />
               Due {data.dueDate || '—'}
@@ -75,8 +75,8 @@ export default async function PublicInvoicePage({
 
           <div className="flex flex-col gap-1.5">
             <p className={microLabel}>From</p>
-            <p className="text-[16px] font-bold tracking-tight">{data.supplier.name || '—'}</p>
-            <p className="text-[14px] leading-relaxed text-muted-foreground">
+            <p className="text-[17px] font-bold tracking-tight">{data.supplier.name || '—'}</p>
+            <p className="text-[15px] leading-relaxed text-muted-foreground">
               {data.supplier.addressLines.join(', ') || '—'}
               {data.supplier.gstin ? (
                 <>
@@ -115,7 +115,7 @@ export default async function PublicInvoicePage({
                   {subLines
                     .filter((line) => line.trim() !== '')
                     .map((line, idx) => (
-                      <p key={idx} className="mt-0.5 text-[12px] text-muted-foreground">
+                      <p key={idx} className="mt-0.5 text-[13px] text-muted-foreground">
                         · {line}
                       </p>
                     ))}
@@ -133,7 +133,7 @@ export default async function PublicInvoicePage({
             <p className={microLabel}>Total in words</p>
             <p className="text-[15px] font-semibold leading-snug">{data.totals.words || '—'}</p>
           </div>
-          <div className="w-full text-[14px] sm:w-80">
+          <div className="w-full text-[15px] sm:w-80">
             <div className="flex justify-between py-1.5">
               <span className="text-muted-foreground">Subtotal — {data.totals.items}</span>
               <span className="tabular-nums">{data.totals.subtotal}</span>
@@ -168,7 +168,7 @@ export default async function PublicInvoicePage({
             </div>
             <div className="mt-1.5 flex items-baseline justify-between border-t border-hairline pt-2.5">
               <span className="text-[15px] font-bold">Total</span>
-              <span className="text-[22px] font-extrabold tabular-nums">{data.totals.total}</span>
+              <span className="text-[22px] font-semibold tabular-nums">{data.totals.total}</span>
             </div>
             {/* Only once something has actually been paid — on an untouched
                 invoice "Paid ₹0 / Balance ₹X" is noise that just restates
@@ -195,7 +195,7 @@ export default async function PublicInvoicePage({
         <div className="grid grid-cols-1 gap-8 border-t border-border pt-6 sm:grid-cols-2">
           <div>
             <p className={microLabel}>Payment</p>
-            <p className="mt-1.5 text-[14px] leading-relaxed text-muted-foreground">
+            <p className="mt-1.5 text-[15px] leading-relaxed text-muted-foreground">
               {data.payment.upiId || '—'}
               {data.payment.bankName ? (
                 <>
@@ -214,7 +214,7 @@ export default async function PublicInvoicePage({
               Terms: {data.payment.termsLabel}
             </p>
             {(data.exportDeclaration || data.reverseChargeNote || data.exchangeRateNote) ? (
-              <p className="mt-3 text-[12px] leading-relaxed text-muted-foreground">
+              <p className="mt-3 text-[13px] leading-relaxed text-muted-foreground">
                 {[data.exportDeclaration, data.reverseChargeNote, data.exchangeRateNote]
                   .filter(Boolean)
                   .join('  ')}

@@ -36,7 +36,7 @@ const METHOD_OPTIONS: { value: PaymentMethod; label: string }[] = [
 
 const fieldLabel = 'text-[13px] font-medium text-muted-foreground'
 const fieldInput =
-  'h-10 rounded-xl border border-transparent bg-secondary px-3 text-[14px] ' +
+  'h-10 rounded-xl border border-transparent bg-secondary px-3 text-[15px] ' +
   'text-foreground outline-none transition-colors focus-visible:border-ring ' +
   'focus-visible:ring-[3px] focus-visible:ring-ring/40'
 
@@ -136,7 +136,7 @@ export function PaymentsSection({
             </span>
           </span>
           {isOverdue ? (
-            <span className="rounded-full bg-destructive/10 px-2 py-0.5 text-[12px] font-medium text-destructive">Overdue</span>
+            <span className="rounded-full bg-destructive/10 px-2 py-0.5 text-[13px] font-medium text-destructive">Overdue</span>
           ) : null}
         </div>
       </div>
@@ -159,7 +159,7 @@ export function PaymentsSection({
               </span>
               <span className="flex-1 text-muted-foreground">{p.reference || '—'}</span>
               {p.tds_paise > 0 ? (
-                <span className="text-[12px] text-muted-foreground">
+                <span className="text-[13px] text-muted-foreground">
                   TDS {formatPaise(p.tds_paise, { currency })}
                 </span>
               ) : null}
