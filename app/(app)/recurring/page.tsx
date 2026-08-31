@@ -14,6 +14,7 @@ import {
 import { todayIso } from '@/lib/dates'
 import { formatPaise } from '@/lib/money'
 import { CADENCE_LABEL } from '@/lib/recurrence'
+import { EmptyState } from '@/components/invoice/empty-state'
 import { createClient } from '@/lib/supabase/server'
 
 import { RecurringRowActions } from './row-actions'
@@ -136,9 +137,10 @@ export default async function RecurringPage() {
         </Table>
         </div>
       ) : (
-        <p className="mt-10 text-[13px] text-muted-foreground">
-          No repeat schedules yet.
-        </p>
+        <EmptyState
+          title="No repeat schedules yet"
+          description="Pick an invoice you send regularly and it’ll be ready to generate each time it’s due."
+        />
       )}
     </div>
   )

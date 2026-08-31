@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/table'
 import { formatPaise } from '@/lib/money'
 import { TAX_RATE_OPTIONS } from '@/lib/tax'
+import { EmptyState } from '@/components/invoice/empty-state'
 import { createClient } from '@/lib/supabase/server'
 
 import { setServiceArchived } from './actions'
@@ -116,9 +117,14 @@ export default async function ServicesPage({
         </Table>
         </div>
       ) : (
-        <p className="mt-10 text-[13px] text-muted-foreground">
-          {showArchived ? 'No archived services.' : 'No services yet.'}
-        </p>
+        <EmptyState
+          title={showArchived ? 'No archived services' : 'No services yet'}
+          description={
+            showArchived
+              ? undefined
+              : 'Your rate card — add the work you bill for and it shows up in the invoice editor.'
+          }
+        />
       )}
 
       <p className="mt-8 text-[13px] text-muted-foreground">

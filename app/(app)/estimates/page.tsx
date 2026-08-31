@@ -12,6 +12,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { formatPaise } from '@/lib/money'
+import { EmptyState } from '@/components/invoice/empty-state'
 import { createClient } from '@/lib/supabase/server'
 
 import { ConvertEstimateButton } from './convert-button'
@@ -130,10 +131,10 @@ export default async function EstimatesPage() {
         </Table>
         </div>
       ) : (
-        <p className="mt-10 text-[13px] text-muted-foreground">
-          No estimates yet. An estimate is a quote you can turn into an invoice once
-          it&apos;s accepted.
-        </p>
+        <EmptyState
+          title="No estimates yet"
+          description="An estimate is a quote you can turn into an invoice once it’s accepted."
+        />
       )}
     </div>
   )

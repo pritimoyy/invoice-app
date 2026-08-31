@@ -88,6 +88,16 @@ const fieldClass =
 // stray click at step=0.001). Quantity still accepts a typed decimal like
 // "2.5" for the 2.5-hours case; it just doesn't offer a clicky control
 // that makes thousandths look like the expected increment.
+// The per-line tax rate is a control, not a value, so it gets the pill
+// treatment rather than the document's invisible-until-focused field
+// style. Sitting transparent immediately after a right-aligned amount, it
+// read as part of the number — "₹2,000 0%".
+const taxSelectClass =
+  'h-7 w-14 shrink-0 cursor-pointer rounded-full border border-hairline bg-secondary ' +
+  'px-1.5 text-[13px] text-muted-foreground outline-none transition-colors ' +
+  'hover:bg-accent focus-visible:border-ring focus-visible:ring-[3px] ' +
+  'focus-visible:ring-ring/30 disabled:cursor-not-allowed disabled:opacity-50'
+
 const noSpinnerClass =
   '[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none'
 
@@ -228,16 +238,11 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
       <div className="flex flex-col gap-3 border-t border-border pt-6">
         <div className={`flex gap-3 border-b border-hairline pb-3 ${microLabel}`}>
           <div className="w-6">#</div>
-          <div className="flex-1">
-            Description
-            <span className="ml-2 font-normal normal-case tracking-normal text-muted-foreground">
-              — Enter for each video title
-            </span>
-          </div>
+          <div className="flex-1">Description</div>
           <div className="w-16 text-right">Qty</div>
           <div className="w-28 text-right">Rate</div>
           <div className="w-32 text-right">Amount</div>
-          <div className="w-24" />
+          <div className="w-40" />
         </div>
         {items.map((item, i) => {
           const tax = lineTax[i]
@@ -265,7 +270,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
                 <button
                   type="button"
                   onClick={() => addDescLine(item.key, item.description)}
-                  className="self-start text-[11px] uppercase tracking-[0.08em] text-muted-foreground hover:text-foreground hover:underline disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:no-underline disabled:hover:text-muted-foreground"
+                  className="self-start rounded-md px-1.5 py-0.5 text-[13px] text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-muted-foreground"
                 >
                   + Video title
                 </button>
@@ -296,11 +301,11 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
                   </div>
                 ) : null}
               </div>
-              <div className="flex w-24 items-center justify-end gap-1.5 pt-0.5 text-muted-foreground">
+              <div className="flex w-40 items-center justify-end gap-1 ps-3 pt-0.5 text-muted-foreground">
                 <select
                   value={item.taxRateBps}
                   onChange={(e) => onItemChange(item.key, { taxRateBps: Number(e.target.value) })}
-                  className={`${fieldClass} w-10 pb-1 text-[11px]`}
+                  className={taxSelectClass}
                 >
                   {TAX_RATE_OPTIONS.map((r) => (
                     <option key={r.bps} value={r.bps}>
@@ -312,7 +317,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
                   type="button"
                   onClick={() => onItemMove(item.key, -1)}
                   disabled={i === 0}
-                  className="hover:text-foreground disabled:opacity-30"
+                  className="flex size-6 shrink-0 items-center justify-center rounded-full text-[13px] transition-colors hover:bg-secondary hover:text-foreground disabled:pointer-events-none disabled:opacity-30"
                 >
                   ↑
                 </button>
@@ -320,7 +325,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
                   type="button"
                   onClick={() => onItemMove(item.key, 1)}
                   disabled={i === items.length - 1}
-                  className="hover:text-foreground disabled:opacity-30"
+                  className="flex size-6 shrink-0 items-center justify-center rounded-full text-[13px] transition-colors hover:bg-secondary hover:text-foreground disabled:pointer-events-none disabled:opacity-30"
                 >
                   ↓
                 </button>
@@ -328,7 +333,7 @@ export function InvoiceDocument(props: InvoiceDocumentProps) {
                   type="button"
                   onClick={() => onItemRemove(item.key)}
                   disabled={items.length === 1}
-                  className="hover:text-destructive disabled:opacity-30"
+                  className="flex size-6 shrink-0 items-center justify-center rounded-full text-[13px] transition-colors hover:bg-destructive/10 hover:text-destructive disabled:pointer-events-none disabled:opacity-30"
                 >
                   ✕
                 </button>

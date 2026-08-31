@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/table'
 import { computeDisplayStatus, wasPaidLate } from '@/lib/invoice-status'
 import { formatPaise } from '@/lib/money'
+import { EmptyState } from '@/components/invoice/empty-state'
 import { createClient } from '@/lib/supabase/server'
 
 import { StatusSelect } from './status-select'
@@ -142,7 +143,10 @@ export default async function InvoicesPage() {
         </Table>
         </div>
       ) : (
-        <p className="mt-10 text-[13px] text-muted-foreground">No invoices yet.</p>
+        <EmptyState
+          title="No invoices yet"
+          description="Start one from a client, and it stays a draft until you send it."
+        />
       )}
 
       {financialYears.length > 0 ? (

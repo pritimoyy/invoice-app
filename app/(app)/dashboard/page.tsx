@@ -43,7 +43,11 @@ function StatCard({
   gradient?: 'blue' | 'violet' | 'mint' | 'sunset'
   valueClassName?: string
 }) {
-  const isGradient = Boolean(gradient)
+  // A gradient tile is for a figure worth looking at. Painting "Nothing
+  // outstanding." across a vivid blue card inverts the hierarchy — the
+  // loudest thing on the page ends up carrying the least information — so
+  // an empty stat falls back to a plain card.
+  const isGradient = Boolean(gradient) && amounts.size > 0
   return (
     <div
       className={
@@ -216,12 +220,12 @@ export default async function DashboardPage() {
           label={`Due in ${DUE_SOON_DAYS} days`}
           amounts={dueSoonByCurrency}
           emptyText="Nothing due soon."
-          gradient="violet"
         />
         <StatCard
           label="Paid this month"
           amounts={paidThisMonthByCurrency}
           emptyText="Nothing yet."
+          gradient="mint"
           valueClassName="text-success"
         />
       </div>

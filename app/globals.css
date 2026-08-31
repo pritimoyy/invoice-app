@@ -264,14 +264,15 @@
      bars. Falls back to an opaque surface where backdrop-filter isn't
      supported, so text never lands on a transparent strip. */
   .app-glass {
-    background-color: color-mix(in srgb, var(--surface) 72%, transparent);
+    /* Opaque enough to stand on its own: an unsupported backdrop-filter is
+       simply ignored by the browser, so the background alone has to keep
+       scrolled content from bleeding through the bar. An earlier version
+       gated the blur behind @supports and sat at 72% — which never
+       applied, leaving text legible straight through the header. */
+    background-color: color-mix(in srgb, var(--surface) 88%, transparent);
     border-bottom: 1px solid var(--hairline);
-  }
-  @supports (backdrop-filter: blur(1px)) {
-    .app-glass {
-      backdrop-filter: saturate(180%) blur(20px);
-      -webkit-backdrop-filter: saturate(180%) blur(20px);
-    }
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
   }
 
   /* Grouped-list row: hairline separators rather than boxes, matching

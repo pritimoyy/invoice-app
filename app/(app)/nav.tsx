@@ -38,34 +38,39 @@ export function AppNav({
        account controls don't fit 896px, and it still wraps rather than
        overflowing a phone. */
     <header className="app-glass sticky top-0 z-40">
-      <div className="mx-auto flex min-h-16 w-full max-w-5xl flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-3 sm:px-6 sm:py-0">
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-          <Link
-            href="/dashboard"
-            className="mr-1 text-[15px] font-semibold tracking-[-0.02em] text-foreground"
-          >
-            {brand}
-          </Link>
-          <nav className="flex flex-wrap items-center gap-1">
-            {LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                aria-current={isActive(pathname, link.href) ? 'page' : undefined}
-                className={cn(
-                  'rounded-full px-3 py-1.5 text-[13px] font-medium transition-colors',
-                  isActive(pathname, link.href)
-                    ? 'bg-secondary text-foreground'
-                    : 'text-muted-foreground hover:bg-secondary/60 hover:text-foreground',
-                )}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-        </div>
+      {/* Ordered so the shell is deliberate at every width rather than
+          wrapping arbitrarily: below lg the nav drops to its own full-width
+          row under brand-and-account; at lg it sits between them on one
+          line. Seven sections plus the account controls simply don't fit
+          one row on a narrow laptop, and stranding "Sign out" at the start
+          of row two looked broken. */}
+      <div className="mx-auto flex min-h-14 w-full max-w-5xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-2.5 sm:px-6 lg:min-h-16 lg:flex-nowrap lg:py-0">
+        <Link
+          href="/dashboard"
+          className="order-1 text-[15px] font-semibold tracking-[-0.02em] text-foreground"
+        >
+          {brand}
+        </Link>
 
-        <div className="flex items-center gap-3">
+        <nav className="order-3 -mx-1 flex w-full items-center gap-1 overflow-x-auto pb-0.5 lg:order-2 lg:mx-0 lg:w-auto lg:overflow-visible lg:pb-0">
+          {LINKS.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              aria-current={isActive(pathname, link.href) ? 'page' : undefined}
+              className={cn(
+                'shrink-0 rounded-full px-3 py-1.5 text-[13px] font-medium transition-colors',
+                isActive(pathname, link.href)
+                  ? 'bg-secondary text-foreground'
+                  : 'text-muted-foreground hover:bg-secondary/60 hover:text-foreground',
+              )}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="order-2 ml-auto flex items-center gap-3 lg:order-3">
           <ThemeToggle />
           {email ? (
             <span className="hidden text-[13px] text-muted-foreground xl:inline">

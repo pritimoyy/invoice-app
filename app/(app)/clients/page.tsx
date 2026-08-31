@@ -10,6 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { EmptyState } from '@/components/invoice/empty-state'
 import { createClient } from '@/lib/supabase/server'
 
 import { setClientArchived } from './actions'
@@ -108,9 +109,10 @@ export default async function ClientsPage({
         </Table>
         </div>
       ) : (
-        <p className="mt-10 text-[13px] text-muted-foreground">
-          {showArchived ? 'No archived clients.' : 'No clients yet.'}
-        </p>
+        <EmptyState
+          title={showArchived ? 'No archived clients' : 'No clients yet'}
+          description={showArchived ? undefined : 'Add a client before starting an invoice.'}
+        />
       )}
 
       <p className="mt-8 text-[13px] text-muted-foreground">

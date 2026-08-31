@@ -46,8 +46,13 @@ const PAID_METHODS: { method: PaymentMethod; label: string }[] = [
 
 const PAID_PREFIX = 'paid:'
 
+// Width is pinned rather than fitted: a native select sizes itself to its
+// widest *option*, so "Draft" was rendering 172px wide to accommodate
+// "Paid late — automatic" sitting invisible in the list. 8.25rem fits the
+// longest label actually shown when closed ("Partially paid") and keeps
+// the column aligned.
 const selectClass =
-  'h-7 w-fit cursor-pointer appearance-none rounded-full border border-hairline bg-secondary ' +
+  'h-7 w-[8.25rem] cursor-pointer appearance-none truncate rounded-full border border-hairline bg-secondary ' +
   'py-0 pl-3 pr-7 text-[13px] font-medium outline-none transition-colors ' +
   'hover:bg-accent focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/40 ' +
   'disabled:cursor-not-allowed disabled:opacity-60'
