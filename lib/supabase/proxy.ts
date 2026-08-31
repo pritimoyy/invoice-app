@@ -8,8 +8,13 @@ import type { Database } from '@/types/database'
  *
  * `/i` is the public invoice view — a client opens it from a link in their
  * inbox and must never be bounced to a login screen.
+ *
+ * `/api/cron` has no session by definition; it authenticates with
+ * CRON_SECRET instead, checked inside the route itself. Without this it
+ * would be redirected to /login and the keep-alive would never reach the
+ * database.
  */
-const PUBLIC_PREFIXES = ['/login', '/i', '/auth']
+const PUBLIC_PREFIXES = ['/login', '/i', '/auth', '/api/cron']
 
 function isPublic(pathname: string) {
   return PUBLIC_PREFIXES.some(
